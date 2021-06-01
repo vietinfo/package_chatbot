@@ -764,6 +764,11 @@ class ChatBloc extends BaseBloc {
                   'Để tra cứu thông tin bạn vui lòng bấm chọn các nút hoặc nhập để tra cứu (ví dụ: Tra cứu thủ tục hành chính)'));
       typing.sink.add(false);
       mess.sink.add(_listMess);
+
+
+
+
+      
     });
   }
 
