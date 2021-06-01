@@ -79,6 +79,7 @@ class ChatBloc extends BaseBloc {
     } else {
       _listMess.insert(0, ChatModel(messLeft: tinNhan));
       mess.sink.add(_listMess);
+
       typing.sink.add(true);
 
       if (listDanhMuc == null) {
@@ -559,8 +560,7 @@ class ChatBloc extends BaseBloc {
   }
 
   void showBottomScroll(bool? show) {
-    if (!scroll.isClosed)
-      scroll.sink.add(show!);
+    if (!scroll.isClosed) scroll.sink.add(show!);
   }
 
   void getAllPhuongXa() {
@@ -579,8 +579,7 @@ class ChatBloc extends BaseBloc {
     final List<PhuongXaModel> result = _listAllPX.where((element) {
       final String xoaDauResult =
           Utilities.instance.xoaDau(element.tenPhuong!).toLowerCase();
-      if (xoaDauResult.contains(queryKhongDau))
-        return true;
+      if (xoaDauResult.contains(queryKhongDau)) return true;
       return false;
     }).toList();
     dsPhuongXa.sink.add(result);

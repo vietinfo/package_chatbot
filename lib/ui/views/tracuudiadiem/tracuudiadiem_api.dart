@@ -3,13 +3,13 @@ part of 'tracuudiadiem_bloc.dart';
 @protected
 Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
     {String? maCoQuan,
-      String? tenCoQuan,
-      double? lat,
-      double? long,
-      int? banKinh,
-      int? pageNum,
-      String? maLoaiDanhMuc}) async {
-  final String _url = LocalVariable.instance.urlAPI + '/api/Home/TraCuuDiaDiem';
+    String? tenCoQuan,
+    double? lat,
+    double? long,
+    int? banKinh,
+    int? pageNum,
+    String? maLoaiDanhMuc}) async {
+  final String _url = LocalVariable.urlAPI + '/api/Home/TraCuuDiaDiem';
 
   final Map<String, dynamic> parms = {
     'maCoQuan': maCoQuan,
@@ -23,8 +23,7 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
   };
 
   final String? json = await HttpRequest.instance.postAsync(_url, parms);
-  if (json == null)
-    return null;
+  if (json == null) return null;
   final data = jsonDecode(json);
   List<TraCuuDiaDiemModels> _listData = <TraCuuDiaDiemModels>[];
   if (data['result'] != null) {
@@ -36,4 +35,3 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
 
   return null;
 }
-

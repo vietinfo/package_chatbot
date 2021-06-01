@@ -2,8 +2,7 @@ part of 'chat_bloc.dart';
 
 @protected
 Future<List<DanhMucChucNangModels>?> _getAllDSChuNangAPI() async {
-  final String _url =
-      LocalVariable.instance.urlAPI + '/api/home/GetAllDanhMucChucNang';
+  final String _url = LocalVariable.urlAPI + '/api/home/GetAllDanhMucChucNang';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
   if (json == null) {
@@ -31,7 +30,7 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
     int? banKinh,
     int? pageNum,
     String? maLoaiDanhMuc}) async {
-  final String _url = LocalVariable.instance.urlAPI + '/api/Home/TraCuuDiaDiem';
+  final String _url = LocalVariable.urlAPI + '/api/Home/TraCuuDiaDiem';
 
   final Map<String, dynamic> parms = {
     'maCoQuan': maCoQuan,
@@ -45,8 +44,7 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
   };
 
   final String? json = await HttpRequest.instance.postAsync(_url, parms);
-  if (json == null)
-    return null;
+  if (json == null) return null;
   final data = jsonDecode(json);
   List<TraCuuDiaDiemModels> _listData = <TraCuuDiaDiemModels>[];
   if (data['result'] != null) {
@@ -61,8 +59,7 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
 
 @protected
 Future<List<BotMessage>> _sendChatBot(String tinNhan) async {
-  final String _url =
-      LocalVariable.instance.urlChatBot + '/webhooks/rest/webhook';
+  final String _url = LocalVariable.urlChatBot + '/webhooks/rest/webhook';
 
   final Map<String, dynamic> parms = {
     'sender': 'Nhanahihi',
@@ -80,8 +77,7 @@ Future<List<BotMessage>> _sendChatBot(String tinNhan) async {
 
 @protected
 Future<List<TraCuuTTHCmodel>?> _getLinhVucTucHanhChinhAPI() async {
-  final String _url =
-      LocalVariable.instance.urlAPI + '/api/Home/GetLinhVucTucHanhChinh';
+  final String _url = LocalVariable.urlAPI + '/api/Home/GetLinhVucTucHanhChinh';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
   if (json == null) {
@@ -104,7 +100,7 @@ Future<List<TraCuuTTHCmodel>?> _getLinhVucTucHanhChinhAPI() async {
 @protected
 Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
     int linhVucID) async {
-  final String _url = LocalVariable.instance.urlAPI +
+  final String _url = LocalVariable.urlAPI +
       '/api/Home/GetDanhSachThuTucHanhChinhTheoLinhVucID/$linhVucID';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
@@ -128,8 +124,8 @@ Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
 @protected
 Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
     String soBienNhan) async {
-  final String _url = LocalVariable.instance.urlAPI +
-      '/api/Home/GetTraCuuSoBienNhan/$soBienNhan';
+  final String _url =
+      LocalVariable.urlAPI + '/api/Home/GetTraCuuSoBienNhan/$soBienNhan';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
   if (json == null) {
@@ -151,8 +147,7 @@ Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
 
 @protected
 Future<List<PhuongXaModel>?> _getAllPhuongXaAPI() async {
-  final String _url =
-      LocalVariable.instance.urlAPI + '/api/Home/Bot_GetAllPhuongXa';
+  final String _url = LocalVariable.urlAPI + '/api/Home/Bot_GetAllPhuongXa';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
   if (json == null) {
@@ -173,8 +168,7 @@ Future<List<PhuongXaModel>?> _getAllPhuongXaAPI() async {
 
 @protected
 Future<ChiTietQuyHoachModel?> _getUrlTraCuuQuyHoachAPI(String thongTin) async {
-  final String _url =
-      LocalVariable.instance.urlAPI + '/api/Home/Bot_GetTraCuuQuyHoach';
+  final String _url = LocalVariable.urlAPI + '/api/Home/Bot_GetTraCuuQuyHoach';
 
   final String? json =
       await HttpRequest.instance.postAsync(_url, {'thongTin': thongTin});

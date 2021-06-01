@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:package_chatbot/core/config/local_variable.dart';
-import 'package:package_chatbot/core/services/shared_pref.dart';
 import 'package:package_chatbot/package_chatbot.dart';
 
 Future<void> main() async {
@@ -12,14 +10,6 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
-  await ExtensionFunction.instance.init();
-
-  final String temp =
-      SharedPref.instance.getString(LocalVariable.instance.apikey);
-  if (temp.isEmpty)
-    SharedPref.instance.setString(LocalVariable.instance.apikey,
-        'AIzaSyAePbFtYtPkHqXRtnO1FFTC6INFHyM2tyo');
 
   runApp(MyApp());
 }
@@ -115,7 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         floatingActionButton: GestureDetector(
           onTap: () {
-            ExtensionFunction.instance.goChat();
+            ExtensionFunction.instance.goChatBot(
+                userName: '', userId: 0, fullName: '', soDienThoai: '');
           },
           child: Stack(
             children: [

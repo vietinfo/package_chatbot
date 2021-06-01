@@ -18,7 +18,7 @@ class HttpRequest {
     final BaseOptions options = BaseOptions(
         connectTimeout: _timeOut,
         receiveTimeout: _timeOut,
-        baseUrl: LocalVariable.instance.urlAPI,
+        baseUrl: LocalVariable.urlAPI,
         contentType: ContentType.json.value,
         responseType: ResponseType.plain);
 
@@ -118,8 +118,7 @@ class HttpRequest {
           print('$sent $total');
         },
       );
-      if (response.statusCode == 200)
-        return response.data;
+      if (response.statusCode == 200) return response.data;
       return null;
     } catch (e) {
       return null;
@@ -138,8 +137,7 @@ class HttpRequest {
           print('$sent $total');
         },
       );
-      if (response.statusCode == 200)
-        return response.data;
+      if (response.statusCode == 200) return response.data;
       return null;
     } catch (e) {
       return null;
