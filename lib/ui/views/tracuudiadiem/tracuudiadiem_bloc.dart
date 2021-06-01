@@ -18,7 +18,7 @@ class TraCuuDiaDiemBloc extends BaseBloc{
   void traCuuDD1({double? lat, double? long, int? banKinh, String? maLoaiDanhMuc, int? pageNum, String? tenCoQuan, String? maCoQuan}){
 
     showLoadingController.sink.add(true);
-    _traCuuDiaDiemAPI(banKinh: banKinh, maLoaiDanhMuc: maLoaiDanhMuc,pageNum: pageNum, maCoQuan: maCoQuan,tenCoQuan: tenCoQuan).then((value) {
+    _traCuuDiaDiemAPI(banKinh: banKinh, maLoaiDanhMuc: maLoaiDanhMuc,pageNum: pageNum, maCoQuan: maCoQuan,tenCoQuan: tenCoQuan, lat: lat, long: long).then((value) {
 
       if (value == null || traCuuDiaDiem.isClosed) {
         showLoadingController.sink.add(false);
@@ -49,7 +49,7 @@ class TraCuuDiaDiemBloc extends BaseBloc{
   void traCuuDD({double? lat, double? long, int? banKinh, String? maLoaiDanhMuc, int? pageNum}){
 
     showLoadingController.sink.add(true);
-    _traCuuDiaDiemAPI(banKinh: banKinh, maLoaiDanhMuc: maLoaiDanhMuc,pageNum: pageNum).then((value) {
+    _traCuuDiaDiemAPI(banKinh: banKinh, maLoaiDanhMuc: maLoaiDanhMuc,pageNum: pageNum, lat: lat, long: long).then((value) {
 
       if (value == null || traCuuDiaDiem.isClosed) {
         showLoadingController.sink.add(false);

@@ -34,7 +34,7 @@ class ChatUI extends StatefulWidget {
 
 class _ChatUIState extends State<ChatUI> {
   final TextEditingController _mess = TextEditingController();
-  ChatBloc? _chatBloc;
+  late ChatBloc _chatBloc;
   List<ChatModel>? _chatModel;
   List<DanhMucChucNangModels>? _danhMucChucNangModels;
   int bk500 = 500;
@@ -52,6 +52,8 @@ class _ChatUIState extends State<ChatUI> {
   int _checkPX = 0;
   int _checkHS = 0;
   int _isCheckTTHS = 0;
+  double? lat;
+  double? long;
 
   String? maLoaiDM;
   List<PhuongXaModel> _listPhuongXa = <PhuongXaModel>[];
@@ -64,6 +66,8 @@ class _ChatUIState extends State<ChatUI> {
     });
     try {
       final LocationData _locationResult = await location.getLocation();
+      lat = _locationResult.latitude;
+      long = _locationResult.longitude;
       print(_locationResult.latitude);
       print(_locationResult.longitude);
     } on PlatformException catch (err) {
@@ -87,7 +91,8 @@ class _ChatUIState extends State<ChatUI> {
     super.initState();
     listScrollController = ScrollController();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
-    _chatBloc!.sendMessAPI('null');
+    _getLocation();
+    _chatBloc.sendMessAPI('null');
   }
 
   @override
@@ -151,13 +156,13 @@ class _ChatUIState extends State<ChatUI> {
               ),
               InkWell(
                 onTap: () {
-                  _chatBloc!.restart();
+                  _chatBloc.restart();
                   _mess.clear();
                   _checkTTQH = false;
                   _checkTTHS = false;
-                  _chatBloc!.dsPhuongXa.sink.add([]);
-                  _chatBloc!.sendController.sink.add(false);
-                  _chatBloc!.checkHuy.sink.add(false);
+                  _chatBloc.dsPhuongXa.sink.add([]);
+                  _chatBloc.sendController.sink.add(false);
+                  _chatBloc.checkHuy.sink.add(false);
                 },
                 child: const Icon(
                   Icons.refresh,
@@ -174,7 +179,7 @@ class _ChatUIState extends State<ChatUI> {
             children: [
               _buildListMessage(),
               StreamBuilder(
-                  stream: _chatBloc!.isCheckLocation.stream,
+                  stream: _chatBloc.isCheckLocation.stream,
                   builder:
                       (context, AsyncSnapshot<Map<bool, String>> snapshot) {
                     if (snapshot.hasData && snapshot.data!.keys.first) {
@@ -195,16 +200,19 @@ class _ChatUIState extends State<ChatUI> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  _getLocation();
                                   if (snapshot.data!.values.first != '1') {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                      lat: lat,
+                                        long: long,
                                         banKinh: bk500,
                                         maLoaiDanhMuc:
                                             snapshot.data!.values.first,
                                         tenDM: tenDM,
                                         pageNum: _pageNum);
                                   } else {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                        lat: lat,
+                                        long: long,
                                         banKinh: bk500,
                                         maLoaiDanhMuc: maLoaiDM,
                                         tenDM: tenDM,
@@ -237,17 +245,20 @@ class _ChatUIState extends State<ChatUI> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  _getLocation();
 
                                   if (snapshot.data!.values.first != '1') {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                        lat: lat,
+                                        long: long,
                                         banKinh: bk1000,
                                         maLoaiDanhMuc:
                                             snapshot.data!.values.first,
                                         tenDM: tenDM,
                                         pageNum: _pageNum);
                                   } else {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                        lat: lat,
+                                        long: long,
                                         banKinh: bk1000,
                                         maLoaiDanhMuc: maLoaiDM,
                                         tenDM: tenDM,
@@ -276,16 +287,20 @@ class _ChatUIState extends State<ChatUI> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  _getLocation();
+
                                   if (snapshot.data!.values.first != '1') {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                        lat: lat,
+                                        long: long,
                                         banKinh: 0,
                                         maLoaiDanhMuc:
                                             snapshot.data!.values.first,
                                         tenDM: tenDM,
                                         pageNum: _pageNum);
                                   } else {
-                                    _chatBloc!.traCuuDD(
+                                    _chatBloc.traCuuDD(
+                                        lat: lat,
+                                        long: long,
                                         banKinh: 0,
                                         maLoaiDanhMuc: maLoaiDM,
                                         tenDM: tenDM,
@@ -318,7 +333,7 @@ class _ChatUIState extends State<ChatUI> {
                               const Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  _chatBloc!.checkLocation();
+                                  _chatBloc.checkLocation();
                                   _scrollEndScreen();
                                 },
                                 child: Padding(
@@ -395,7 +410,7 @@ class _ChatUIState extends State<ChatUI> {
                                                       bodyBuilder: (context) =>
                                                           ListItems(
                                                         _danhMucChucNangModels,
-                                                        _chatBloc!,
+                                                        _chatBloc,
                                                         _scrollEndScreen,
                                                         checkTTHS: (value) {
                                                           _checkTTHS = value;
@@ -443,8 +458,9 @@ class _ChatUIState extends State<ChatUI> {
                                           InkWell(
                                             onTap: () {
                                               if (_mess.text.isNotEmpty) {
-                                                _getLocation();
-                                                _chatBloc!.traCuuDD(
+                                                _chatBloc.traCuuDD(
+                                                    lat: lat,
+                                                    long: long,
                                                     banKinh:
                                                         int.parse(_mess.text),
                                                     maLoaiDanhMuc: maLoaiDM,
@@ -478,7 +494,7 @@ class _ChatUIState extends State<ChatUI> {
                           alignment: Alignment.bottomLeft,
                           child: StreamBuilder(
                               initialData: false,
-                              stream: _chatBloc?.sendController.stream,
+                              stream: _chatBloc.sendController.stream,
                               builder: (context, AsyncSnapshot<bool> snapshot) {
                                 return Column(
                                   children: [
@@ -542,7 +558,7 @@ class _ChatUIState extends State<ChatUI> {
                                                                   (context) =>
                                                                       ListItems(
                                                                 _danhMucChucNangModels,
-                                                                _chatBloc!,
+                                                                _chatBloc,
                                                                 _scrollEndScreen,
                                                                 checkTTHS:
                                                                     (value) {
@@ -695,7 +711,7 @@ class _ChatUIState extends State<ChatUI> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 60),
               child: StreamBuilder(
-                  stream: _chatBloc!.dsPhuongXa.stream,
+                  stream: _chatBloc.dsPhuongXa.stream,
                   builder:
                       (context, AsyncSnapshot<List<PhuongXaModel>> snapshot) {
                     switch (snapshot.connectionState) {
@@ -791,9 +807,9 @@ class _ChatUIState extends State<ChatUI> {
                 onNotification: (scrollNotification) {
                   if (scrollNotification is ScrollUpdateNotification) {
                     if (scrollNotification.metrics.pixels != 0) {
-                      _chatBloc!.showBottomScroll(true);
+                      _chatBloc.showBottomScroll(true);
                     } else {
-                      _chatBloc!.showBottomScroll(false);
+                      _chatBloc.showBottomScroll(false);
                     }
                   }
                   return true;
@@ -803,7 +819,7 @@ class _ChatUIState extends State<ChatUI> {
                   padding: EdgeInsets.zero,
                   reverse: true,
                   child: StreamBuilder(
-                      stream: _chatBloc!.mess.stream,
+                      stream: _chatBloc.mess.stream,
                       builder:
                           (context, AsyncSnapshot<List<ChatModel>> snapshot) {
                         if (snapshot.hasData) {
@@ -839,28 +855,28 @@ class _ChatUIState extends State<ChatUI> {
                           //--------------------------------------//
                           return Column(
                             children: _chatModel!.reversed.map((e) {
-                              tenDM = e.messLeft;
+                              tenDM = e.messRight;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   if (e.isInfo == true) _info(),
-                                  if (e.messLeft != null)
+                                  if (e.messRight != null)
                                     Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: GestureDetector(
                                           onTap: () {},
                                           child: MessageTile(
-                                            message: e.messLeft!,
+                                            message: e.messRight!,
                                             sendByMe: true,
                                           ),
                                         )),
-                                  if (e.messRight != null)
+                                  if (e.messLeft != null)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
                                         onTap: () {},
                                         child: MessageTile(
-                                          message: e.messRight!,
+                                          message: e.messLeft!,
                                           sendByMe: false,
                                         ),
                                       ),
@@ -874,7 +890,7 @@ class _ChatUIState extends State<ChatUI> {
                                       children: [
                                         StreamBuilder(
                                             stream:
-                                                _chatBloc!.dsChucNang.stream,
+                                                _chatBloc.dsChucNang.stream,
                                             builder: (context,
                                                 AsyncSnapshot<
                                                         List<
@@ -906,7 +922,7 @@ class _ChatUIState extends State<ChatUI> {
               left: 10,
               bottom: 0,
               child: StreamBuilder(
-                  stream: _chatBloc!.typing.stream,
+                  stream: _chatBloc.typing.stream,
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData && snapshot.data!) {
                       return Row(
@@ -937,14 +953,14 @@ class _ChatUIState extends State<ChatUI> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: StreamBuilder(
-                    stream: _chatBloc!.scroll.stream,
+                    stream: _chatBloc.scroll.stream,
                     builder: (context, AsyncSnapshot<bool> snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data!) {
                           return GestureDetector(
                             onTap: () {
                               _scrollEndScreen();
-                              _chatBloc!.showBottomScroll(false);
+                              _chatBloc.showBottomScroll(false);
                             },
                             child: Stack(
                               children: [
@@ -980,15 +996,15 @@ class _ChatUIState extends State<ChatUI> {
               right: 20,
               bottom: 10,
               child: StreamBuilder(
-                  stream: _chatBloc!.checkHuy.stream,
+                  stream: _chatBloc.checkHuy.stream,
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!) {
                         return GestureDetector(
                           onTap: () {
-                            _chatBloc!.sendHuyTraCuu(value: 'Hủy');
+                            _chatBloc.sendHuyTraCuu(value: 'Hủy');
                             _mess.clear();
-                            _chatBloc!.sendController.sink.add(false);
+                            _chatBloc.sendController.sink.add(false);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),
@@ -1085,26 +1101,26 @@ class _ChatUIState extends State<ChatUI> {
                     _checkTTHS = true;
                   } else {
                     _checkTTHS = false;
-                    _chatBloc!.checkHuy.sink.add(false);
+                    _chatBloc.checkHuy.sink.add(false);
                   }
 
                   if (_danhMucChucNangModels![index].maChucNang! == 'TCTTQH') {
                     _checkTTQH = true;
-                    _chatBloc!.getAllPhuongXa();
+                    _chatBloc.getAllPhuongXa();
                   } else {
                     _checkPX = 0;
-                    _chatBloc!.dsPhuongXa.sink.add([]);
+                    _chatBloc.dsPhuongXa.sink.add([]);
                     _checkTTQH = false;
                     _mess.clear();
-                    _chatBloc!.checkHuy.sink.add(false);
+                    _chatBloc.checkHuy.sink.add(false);
                   }
 
-                  _chatBloc!.sendMessAPI(
+                  _chatBloc.sendMessAPI(
                       _danhMucChucNangModels![index].tenChucNang!,
                       maChucNang: _danhMucChucNangModels![index].maChucNang!,
                       listDanhMuc: _danhMucChucNangModels![index].listDanhMuc);
                   _scrollEndScreen();
-                  _chatBloc!.checkLocation();
+                  _chatBloc.checkLocation();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -1244,11 +1260,11 @@ class _ChatUIState extends State<ChatUI> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      _chatBloc!.getDSTTHC(listTTHC[index].linhVucID!,
+                      _chatBloc.getDSTTHC(listTTHC[index].linhVucID!,
                           tinNhan: listTTHC[index].tenLinhVuc!);
                       _checkTTQH = false;
                       _scrollEndScreen();
-                      _chatBloc!.checkHuy.sink.add(false);
+                      _chatBloc.checkHuy.sink.add(false);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -1601,7 +1617,7 @@ class _ChatUIState extends State<ChatUI> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  _chatBloc!.checkHuy.sink.add(false);
+                  _chatBloc.checkHuy.sink.add(false);
                   Get.to(
                       BlocProvider(
                           child: ChiTietThuTucUI(), bloc: ChiTietThuTucBloc()),
@@ -1762,7 +1778,7 @@ class _ChatUIState extends State<ChatUI> {
 
   void _checkThongTinQuyHoach(String value) {
     if (_checkPX == 0) {
-      _chatBloc!.searchPhuongXa(keySearch: value);
+      _chatBloc.searchPhuongXa(keySearch: value);
     }
   }
 
@@ -1776,7 +1792,7 @@ class _ChatUIState extends State<ChatUI> {
     _checkPX++;
 
     if (value.trim().isNotEmpty) {
-      _chatBloc!.sendThongTinPhuongXa(tinNhan: value, isCheck: _checkPX);
+      _chatBloc.sendThongTinPhuongXa(tinNhan: value, isCheck: _checkPX);
     }
     if (_checkPX == 3) {
       _checkPX = 0;
@@ -1790,7 +1806,7 @@ class _ChatUIState extends State<ChatUI> {
     if (_isCheckTTHS == 0) {
       _checkHS++;
       if (value.trim().isNotEmpty) {
-        _chatBloc!.sendThongTinHoSo(tinNhan: value, isCheckTTHS: _checkHS);
+        _chatBloc.sendThongTinHoSo(tinNhan: value, isCheckTTHS: _checkHS);
       }
     }
   }
@@ -1799,7 +1815,7 @@ class _ChatUIState extends State<ChatUI> {
     _mess.text = tenPhuongXa;
     _mess.selection =
         TextSelection.fromPosition(TextPosition(offset: _mess.text.length));
-    _chatBloc!.dsPhuongXa.sink.add([]);
+    _chatBloc.dsPhuongXa.sink.add([]);
   }
 
   void _voiceCheck(String text) {
@@ -1809,18 +1825,18 @@ class _ChatUIState extends State<ChatUI> {
         _mess.selection =
             TextSelection.fromPosition(TextPosition(offset: _mess.text.length));
       });
-      _chatBloc!.sendController.sink.add(true);
+      _chatBloc.sendController.sink.add(true);
     } else {
-      _chatBloc!.sendController.sink.add(false);
+      _chatBloc.sendController.sink.add(false);
     }
   }
 
   void _sendBot() {
     if (_mess.text.trim().isNotEmpty) {
-      _chatBloc!
-          .sendMessBot(_mess.text, danhMucChucNang: _danhMucChucNangModels);
+      _chatBloc
+          .sendMessBot(_mess.text, danhMucChucNang: _danhMucChucNangModels,lat: lat, long: long);
 
-      _chatBloc!.sendController.sink.add(false);
+      _chatBloc.sendController.sink.add(false);
       _mess.clear();
 
       _scrollEndScreen();
@@ -1834,9 +1850,9 @@ class _ChatUIState extends State<ChatUI> {
 
   void _soanTinNhan(String value) {
     if (value.trim().isNotEmpty) {
-      _chatBloc!.sendController.sink.add(true);
+      _chatBloc.sendController.sink.add(true);
     } else {
-      _chatBloc!.sendController.sink.add(false);
+      _chatBloc.sendController.sink.add(false);
     }
     // if(_checkTTQH){
     //   FocusScope.of(context).unfocus();

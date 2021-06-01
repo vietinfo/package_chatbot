@@ -5,9 +5,10 @@ import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
 import 'ds_chu_nang_model.dart';
 
 class ChatModel {
-  String? iD;
-  String? messLeft;
+  int? userId;
+  String? userName;
   String? messRight;
+  String? messLeft;
   bool isHeader;
   bool isInfo;
   bool isListDM;
@@ -20,6 +21,7 @@ class ChatModel {
   List<ListDanhMuc>? listDanhMuc;
   List<TraCuuTTHCmodel>? listTTHC;
   TraCuu? traCuu;
+  DateTime? createDate;
 
   ChatModel({
     this.isHeader = false,
@@ -31,12 +33,14 @@ class ChatModel {
     this.isTTQHEnd = false,
     this.isTTHS = false,
     this.isTTHSEnd = 0,
-    this.iD,
-    this.messLeft,
+    this.userId,
+    this.userName,
     this.messRight,
+    this.messLeft,
     this.listDanhMuc,
     this.traCuu,
     this.listTTHC,
+    this.createDate
   });
 }
 
