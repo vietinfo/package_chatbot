@@ -11,6 +11,7 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
     String? maLoaiDanhMuc}) async {
   final String _url = LocalVariable.urlAPI + '/api/Home/TraCuuDiaDiem';
 
+
   final Map<String, dynamic> parms = {
     'maCoQuan': maCoQuan,
     'tenCoQuan': tenCoQuan,

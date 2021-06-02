@@ -84,6 +84,7 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold)),
                                     )),
+
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Align(
