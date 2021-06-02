@@ -24,6 +24,7 @@ class ChatBloc extends BaseBloc {
   final List<TraCuuDiaDiemModels> _traCuuDiaDiem = <TraCuuDiaDiemModels>[];
   List<ListDanhMuc> _listDanhMuc = <ListDanhMuc>[];
   List<PhuongXaModel> _listAllPX = <PhuongXaModel>[];
+  List<BotMessage> listBotMess = <BotMessage>[];
   bool _isCheckTTQH = false;
   String _tenPhuong = '';
   String _soTo = '';
@@ -61,12 +62,12 @@ class ChatBloc extends BaseBloc {
   }) {
     if (tinNhan == 'null') {
       _listMess.insert(
-          0, ChatModel(isInfo: true, messRight: 'Hướng dẫn tra cứu'));
+          0, ChatModel(isInfo: true, messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
               isHeader: true,
-              messRight:
+              messLeft:
                   'Để tra cứu thông tin bạn vui lòng bấm chọn các nút hoặc nhập để tra cứu (ví dụ: Tra cứu thủ tục hành chính)'));
 
       mess.sink.add(_listMess);
@@ -77,10 +78,11 @@ class ChatBloc extends BaseBloc {
         isCheckLocation.sink.add({false: '1'});
       });
     } else {
-      _listMess.insert(0, ChatModel(messLeft: tinNhan));
+      _listMess.insert(0, ChatModel(messRight: tinNhan));
       mess.sink.add(_listMess);
 
       typing.sink.add(true);
+
 
       if (listDanhMuc == null) {
         traCuuAPI(tinNhan, maChucNang!);
@@ -93,8 +95,10 @@ class ChatBloc extends BaseBloc {
   void sendMessBot(String tinNhan,
       {List<DanhMucChucNangModels>? danhMucChucNang,
       bool? checkTTHS,
+      double? lat,
+      double? long,
       int? isCheckTTHS}) {
-    _listMess.insert(0, ChatModel(messLeft: tinNhan));
+    _listMess.insert(0, ChatModel(messRight: tinNhan));
     mess.sink.add(_listMess);
     typing.sink.add(true);
 
@@ -132,7 +136,8 @@ class ChatBloc extends BaseBloc {
         if (value.first.custom != null) {
           switch (value.first.custom!.type) {
             case 'action_tra_cuu_dia_diem_theo_ban_kinh':
-              keyTraCuuDiaDiemTheoBanKinh(value, tinNhan: tinNhan);
+              keyTraCuuDiaDiemTheoBanKinh(value,
+                  tinNhan: tinNhan, lat: lat, long: long);
               break;
             case 'action_tra_cuu_dia_diem':
               keyTraCuuDiaDiem(value, tinNhan: tinNhan);
@@ -151,7 +156,7 @@ class ChatBloc extends BaseBloc {
         _listMess.insert(
             0,
             ChatModel(
-              messRight:
+              messLeft:
                   'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập',
             ));
         mess.sink.add(_listMess);
@@ -165,12 +170,12 @@ class ChatBloc extends BaseBloc {
       case 'TCTTHC':
         _getLinhVucTucHanhChinhAPI().then((value) {
           if (value != null) {
-            _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+            _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
             _listMess.insert(
                 0,
                 ChatModel(
                     isTTHC: true,
-                    messRight:
+                    messLeft:
                         'Để ${tinNhan.toLowerCase()} bạn vui lòng bấm nút hoặc nhập để tra cứu (vd: ${value.first.tenLinhVuc!.toLowerCase()})',
                     listTTHC: value));
 
@@ -197,12 +202,12 @@ class ChatBloc extends BaseBloc {
   }
 
   void traCuuDM(String tinNhan, List<ListDanhMuc>? listDanhMuc) {
-    _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+    _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
     _listMess.insert(
         0,
         ChatModel(
             isListDM: true,
-            messRight:
+            messLeft:
                 'Để ${tinNhan.toLowerCase()} bạn vui lòng bấm nút hoặc nhập để tra cứu (vd: ${listDanhMuc!.first.tenLoaiDanhMuc})',
             listDanhMuc: listDanhMuc));
     mess.sink.add(_listMess);
@@ -213,14 +218,14 @@ class ChatBloc extends BaseBloc {
 
   void getDSTTHC(int linhVucID, {String? tinNhan}) {
     if (tinNhan != null) {
-      _listMess.insert(0, ChatModel(messLeft: tinNhan));
+      _listMess.insert(0, ChatModel(messRight: tinNhan));
       _getDanhSachThuTucHanhChinhTheoAPI(linhVucID).then((value) {
         if (value != null) {
-          _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+          _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
           _listMess.insert(
               0,
               ChatModel(
-                  messRight:
+                  messLeft:
                       'Để tra cứu thông tin thủ tục ${tinNhan.toUpperCase()} bạn vui lòng chọn mục bạn muốn tra cứu',
                   traCuu: TraCuu(
                       traCuuTTHCmodel: value,
@@ -231,11 +236,11 @@ class ChatBloc extends BaseBloc {
     } else {
       _getDanhSachThuTucHanhChinhTheoAPI(linhVucID).then((value) {
         if (value != null) {
-          _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+          _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
           _listMess.insert(
               0,
               ChatModel(
-                  messRight:
+                  messLeft:
                       'Để tra cứu thông tin thủ tục ${value.first.tenLinhVuc!.toUpperCase()} bạn vui lòng chọn mục bạn muốn tra cứu',
                   traCuu: TraCuu(
                       traCuuTTHCmodel: value,
@@ -246,9 +251,16 @@ class ChatBloc extends BaseBloc {
     }
   }
 
-  void keyTraCuuDiaDiemTheoBanKinh(List<BotMessage> values,
-      {String? tinNhan, int? pageNum}) {
+  void keyTraCuuDiaDiemTheoBanKinh(
+    List<BotMessage> values, {
+    String? tinNhan,
+    int? pageNum,
+    double? lat,
+    double? long,
+  }) {
     _traCuuDiaDiemAPI(
+            lat: lat,
+            long: long,
             banKinh: values.first.custom!.data!.banKinh,
             maLoaiDanhMuc: values.first.custom!.data!.maLoaiDanhMuc,
             tenCoQuan: values.first.custom!.data!.tenCoQuan,
@@ -258,16 +270,22 @@ class ChatBloc extends BaseBloc {
       if (value != null) {
         if (value.isNotEmpty) {
           if (value.length > 1) {
-            Get.to(
-                BlocProvider(
-                    child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-                arguments: {
-                  'banKinh': values.first.custom!.data!.banKinh,
-                  'tenDM': tinNhan,
-                  'result': value,
-                  'results': values,
-                  'checkDD': 1
-                });
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value[0], type: 'action_tra_cuu_dia_diem')));
+            _listMess.insert(
+                0,
+                ChatModel(
+                    isReadMore: (value.length == 2)?false:true,
+                    traCuu: TraCuu(
+                        dataBot: values,data1: value[1], type: 'action_tra_cuu_dia_diem')));
+
+            mess.sink.add(_listMess);
+
+
+
           } else {
             _listMess.insert(
                 0,
@@ -280,7 +298,7 @@ class ChatBloc extends BaseBloc {
           _listMess.insert(
               0,
               ChatModel(
-                messRight:
+                messLeft:
                     'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập, bạn vui lòng thử lại sau',
               ));
           mess.sink.add(_listMess);
@@ -341,7 +359,7 @@ class ChatBloc extends BaseBloc {
         _listMess.insert(
             0,
             ChatModel(
-              messRight: 'Thông tin địa điểm $tinNhan',
+              messLeft: 'Thông tin địa điểm $tinNhan',
             ));
 
         _listMess.insert(
@@ -355,7 +373,7 @@ class ChatBloc extends BaseBloc {
         _listMess.insert(
             0,
             ChatModel(
-                messRight:
+                messLeft:
                     'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập'));
         mess.sink.add(_listMess);
       }
@@ -382,11 +400,11 @@ class ChatBloc extends BaseBloc {
   void keyTraCuuTTHC(List<BotMessage> value, String tinNhan) {
     if (value.first.custom!.data!.traCuuTTHC != null) {
       if (value.first.custom!.data!.traCuuTTHC!.isNotEmpty) {
-        _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+        _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
         _listMess.insert(
             0,
             ChatModel(
-                messRight:
+                messLeft:
                     'Để tra cứu thông tin thủ tục ${tinNhan.toUpperCase()} bạn vui lòng chọn mục bạn muốn tra cứu',
                 traCuu: TraCuu(
                     traCuuTTHCmodel: value.first.custom!.data!.traCuuTTHC!,
@@ -399,7 +417,7 @@ class ChatBloc extends BaseBloc {
   }
 
   void messDanhMuc({ListDanhMuc? listDanhMuc, int? banKinh}) {
-    _listMess.insert(0, ChatModel(messLeft: listDanhMuc!.tenLoaiDanhMuc));
+    _listMess.insert(0, ChatModel(messRight: listDanhMuc!.tenLoaiDanhMuc));
     mess.sink.add(_listMess);
     isCheckLocation.sink.add({true: '1'});
   }
@@ -411,26 +429,45 @@ class ChatBloc extends BaseBloc {
       String? maLoaiDanhMuc,
       String? tenDM,
       int? pageNum}) {
-    // _listMess.insert(0, ChatModel(isCheckTraCuuDiaDiem: true));
     _traCuuDiaDiemAPI(
-            banKinh: banKinh, maLoaiDanhMuc: maLoaiDanhMuc, pageNum: pageNum)
+            lat: lat,
+            long: long,
+            banKinh: banKinh,
+            maLoaiDanhMuc: maLoaiDanhMuc,
+            pageNum: pageNum)
         .then((value) {
       if (value != null) {
         if (value.isNotEmpty) {
-          Get.to(
-              BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-              arguments: {
-                'banKinh': banKinh,
-                'tenDM': tenDM,
-                'maLoaiDanhMuc': maLoaiDanhMuc,
-                'checkDD': 0
-              });
+          if (value.length > 1) {
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value[0], type: 'action_tra_cuu_dia_diem')));
+            _listMess.insert(
+                0,
+                ChatModel(
+                    isReadMore: (value.length == 2)?false:true,
+                    traCuu: TraCuu(banKinh: banKinh,tenDM: tenDM,maLoaiDanhMuc: maLoaiDanhMuc,data1: value[1], type: 'action_tra_cuu_dia_diem')));
+
+            mess.sink.add(_listMess);
+
+
+          } else {
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value.first, type: 'action_tra_cuu_dia_diem')));
+            mess.sink.add(_listMess);
+          }
+
           isCheckLocation.sink.add({false: '1'});
         } else {
           _listMess.insert(
               0,
               ChatModel(
-                messRight:
+                messLeft:
                     'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập',
               ));
           mess.sink.add(_listMess);
@@ -446,12 +483,12 @@ class ChatBloc extends BaseBloc {
   void restart() {
     _listMess.clear();
     _listMess.insert(
-        0, ChatModel(isInfo: true, messRight: 'Hướng dẫn tra cứu'));
+        0, ChatModel(isInfo: true, messLeft: 'Hướng dẫn tra cứu'));
     _listMess.insert(
         0,
         ChatModel(
             isHeader: true,
-            messRight:
+            messLeft:
                 'Để tra cứu thông tin bạn vui lòng bấm chọn các nút hoặc nhập để tra cứu (ví dụ: Tra cứu thủ tục hành chính)'));
     mess.sink.add(_listMess);
     typing.sink.add(true);
@@ -467,7 +504,7 @@ class ChatBloc extends BaseBloc {
   }
 
   void sendMessRight(List<BotMessage> value) {
-    _listMess.insert(0, ChatModel(messRight: value.first.text));
+    _listMess.insert(0, ChatModel(messLeft: value.first.text));
     mess.sink.add(_listMess);
     typing.sink.add(false);
   }
@@ -548,7 +585,7 @@ class ChatBloc extends BaseBloc {
     _listMess.insert(
         0,
         ChatModel(
-          messRight:
+          messLeft:
               'Xin lỗi dữ liệu của tôi chưa đủ khả năng để hiểu ý của bạn.',
         ));
     mess.sink.add(_listMess);
@@ -588,20 +625,20 @@ class ChatBloc extends BaseBloc {
   void sendThongTinPhuongXa({String? tinNhan, int? isCheck}) {
     if (isCheck == 0) {
       checkHuy.sink.add(true);
-      _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+      _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
-            messRight:
+            messLeft:
                 'Để tra cứu thông tin quy hoạch bạn vui lòng nhập theo hướng dẫn',
           ));
       _listMess.insert(
           0,
           ChatModel(
-            messRight: 'Bạn vui lòng nhập Phường(xã)',
+            messLeft: 'Bạn vui lòng nhập Phường(xã)',
           ));
       _listMess.insert(0,
-          ChatModel(isTTQH: (_isCheckTTQH) ? true : false, messLeft: tinNhan));
+          ChatModel(isTTQH: (_isCheckTTQH) ? true : false, messRight: tinNhan));
     }
 
     if (isCheck == 1) {
@@ -609,7 +646,7 @@ class ChatBloc extends BaseBloc {
       _tenPhuong = tinNhan!;
       typing.sink.add(true);
       _listMess.insert(0,
-          ChatModel(messLeft: tinNhan, messRight: 'Bạn vui lòng nhập số tờ'));
+          ChatModel(messRight: tinNhan, messLeft: 'Bạn vui lòng nhập số tờ'));
     }
 
     if (isCheck == 2) {
@@ -617,7 +654,7 @@ class ChatBloc extends BaseBloc {
       _soTo = tinNhan!;
       typing.sink.add(true);
       _listMess.insert(0,
-          ChatModel(messLeft: tinNhan, messRight: 'Bạn vui lòng nhập số thửa'));
+          ChatModel(messRight: tinNhan, messLeft: 'Bạn vui lòng nhập số thửa'));
     }
 
     if (isCheck == 3) {
@@ -626,7 +663,7 @@ class ChatBloc extends BaseBloc {
       _listMess.insert(
           0,
           ChatModel(
-              messLeft: tinNhan, messRight: '$_tenPhuong/$_soTo/$_soThua'));
+              messRight: tinNhan, messLeft: '$_tenPhuong/$_soTo/$_soThua'));
       // _listMess.insert(0, ChatModel(messRight: 'Bạn vui lòng chờ kết quả'));
       checkHuy.sink.add(false);
 
@@ -659,7 +696,7 @@ class ChatBloc extends BaseBloc {
       }
       // Get.to(WebViewWidget(value));
       else {
-        _listMess.insert(0, ChatModel(messRight: 'không tìm thấy thông tin'));
+        _listMess.insert(0, ChatModel(messLeft: 'không tìm thấy thông tin'));
         mess.sink.add(_listMess);
       }
     });
@@ -668,12 +705,12 @@ class ChatBloc extends BaseBloc {
   void sendThongTinHoSo({String? tinNhan, int? isCheckTTHS}) {
     if (isCheckTTHS == 0) {
       checkHuy.sink.add(true);
-      _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+      _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
             isTTHS: (_isCheckTTHS) ? true : false,
-            messRight:
+            messLeft:
                 'Để tra cứu tình trạng hồ sơ vui lòng nhập số biên nhận được ghi trên hồ sơ (vd: 123456ABCD)',
           ));
       mess.sink.add(_listMess);
@@ -686,7 +723,7 @@ class ChatBloc extends BaseBloc {
             _listMess.insert(
                 0,
                 ChatModel(
-                  messLeft: tinNhan,
+                  messRight: tinNhan,
                 ));
 
             _listMess.insert(
@@ -706,8 +743,8 @@ class ChatBloc extends BaseBloc {
                 0,
                 ChatModel(
                   isTTHSEnd: 1,
-                  messLeft: tinNhan,
-                  messRight:
+                  messRight: tinNhan,
+                  messLeft:
                       'Mã hồ sơ này không tồn tại. Quý khách vui lòng kiểm tra lại.',
                 ));
             mess.sink.add(_listMess);
@@ -718,8 +755,8 @@ class ChatBloc extends BaseBloc {
               0,
               ChatModel(
                 isTTHSEnd: 1,
-                messLeft: tinNhan,
-                messRight:
+                messRight: tinNhan,
+                messLeft:
                     'Mã hồ sơ này không tồn tại. Quý khách vui lòng kiểm tra lại.',
               ));
           mess.sink.add(_listMess);
@@ -731,22 +768,85 @@ class ChatBloc extends BaseBloc {
 
   Future sendHuyTraCuu({String? value}) async {
     checkHuy.sink.add(false);
-    _listMess.insert(0, ChatModel(messLeft: 'Hủy'));
+    _listMess.insert(0, ChatModel(messRight: 'Hủy'));
     mess.sink.add(_listMess);
     typing.sink.add(true);
     await Future.delayed(const Duration(seconds: 1), () {
-      _listMess.insert(0, ChatModel(messRight: 'Hướng dẫn tra cứu'));
+      _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
               isTTHSEnd: 2,
               isTTQHEnd: true,
               isHeader: true,
-              messRight:
+              messLeft:
                   'Để tra cứu thông tin bạn vui lòng bấm chọn các nút hoặc nhập để tra cứu (ví dụ: Tra cứu thủ tục hành chính)'));
       typing.sink.add(false);
       mess.sink.add(_listMess);
+
+
+
+
+      
     });
+  }
+
+  void readMoreDD(
+      TraCuu values,
+      String? tinNhan,
+      int? pageNum,
+      double? lat,
+      double? long,){
+    if(values.dataBot != null){
+      _traCuuDiaDiemAPI(
+          banKinh: values.dataBot!.first.custom!.data!.banKinh,
+          maLoaiDanhMuc: values.dataBot!.first.custom!.data!.maLoaiDanhMuc,
+          tenCoQuan: values.dataBot!.first.custom!.data!.tenCoQuan,
+          maCoQuan: values.dataBot!.first.custom!.data!.maCoQuan,
+          pageNum: 1)
+          .then((value) {
+        if (value != null) {
+          if (value.isNotEmpty) {
+            if (value.length > 1) {
+              Get.to(
+                  BlocProvider(
+                      child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+                  arguments: {
+                    'banKinh': values.dataBot!.first.custom!.data!.banKinh,
+                    'tenDM': tinNhan,
+                    'result': value,
+                    'results': values.dataBot,
+                    'checkDD': 1
+                  });
+            }
+          } else {
+            _listMess.insert(
+                0,
+                ChatModel(
+                  messRight:
+                  'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập, bạn vui lòng thử lại sau',
+                ));
+            mess.sink.add(_listMess);
+          }
+        } else {
+          troGiup();
+        }
+      });
+    }else{
+      Get.to(
+          BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+          arguments: {
+            'lat': lat,
+            'long': long,
+            'banKinh': values.banKinh,
+            'tenDM': values.tenDM,
+            'maLoaiDanhMuc': values.maLoaiDanhMuc,
+            'checkDD': 0
+          });
+    }
+
+
+
   }
 
   @override

@@ -11,10 +11,11 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
     String? maLoaiDanhMuc}) async {
   final String _url = LocalVariable.urlAPI + '/api/Home/TraCuuDiaDiem';
 
+
   final Map<String, dynamic> parms = {
     'maCoQuan': maCoQuan,
     'tenCoQuan': tenCoQuan,
-    'lat': 10.888536,
+    'lat':10.888536,
     'long': 106.594979,
     'banKinh': banKinh,
     'maLoaiDanhMuc': maLoaiDanhMuc,

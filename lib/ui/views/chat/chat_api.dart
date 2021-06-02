@@ -123,6 +123,7 @@ Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
 
 @protected
 Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
+
     String soBienNhan) async {
   final String _url =
       LocalVariable.urlAPI + '/api/Home/GetTraCuuSoBienNhan/$soBienNhan';

@@ -14,6 +14,7 @@ import 'package:path/path.dart' as path;
 part 'chitietthutuc_api.dart';
 
 class ChiTietThuTucBloc extends BaseBloc {
+
   final BehaviorSubject<ChiTietThuTucModel> chiTietThuTuc =
       BehaviorSubject<ChiTietThuTucModel>();
 
