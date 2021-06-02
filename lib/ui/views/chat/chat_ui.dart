@@ -247,6 +247,7 @@ class _ChatUIState extends State<ChatUI> {
                               GestureDetector(
                                 onTap: () {
 
+
                                   if (snapshot.data!.values.first != '1') {
                                     _chatBloc.traCuuDD(
                                         lat: lat,

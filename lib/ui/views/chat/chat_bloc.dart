@@ -83,6 +83,7 @@ class ChatBloc extends BaseBloc {
 
       typing.sink.add(true);
 
+
       if (listDanhMuc == null) {
         traCuuAPI(tinNhan, maChucNang!);
       } else {

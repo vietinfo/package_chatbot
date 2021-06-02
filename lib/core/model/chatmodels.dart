@@ -54,11 +54,11 @@ class TraCuu {
   List<TraCuuTTHCmodel>? traCuuTTHCmodel;
   ChiTietQuyHoachModel? chiTietQuyHoachModel;
   String? type;
-
   List<BotMessage>? dataBot;
   int? banKinh;
   String? maLoaiDanhMuc;
   String? tenDM;
+
 
   TraCuu(
       {this.data,
