@@ -2,6 +2,7 @@ import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
 import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
 import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
 
+import 'botmessasge.dart';
 import 'ds_chu_nang_model.dart';
 
 class ChatModel {
@@ -22,6 +23,7 @@ class ChatModel {
   List<TraCuuTTHCmodel>? listTTHC;
   TraCuu? traCuu;
   DateTime? createDate;
+  bool isReadMore;
 
   ChatModel({
     this.isHeader = false,
@@ -32,6 +34,7 @@ class ChatModel {
     this.isTTQH = false,
     this.isTTQHEnd = false,
     this.isTTHS = false,
+    this.isReadMore = false,
     this.isTTHSEnd = 0,
     this.userId,
     this.userName,
@@ -40,7 +43,7 @@ class ChatModel {
     this.listDanhMuc,
     this.traCuu,
     this.listTTHC,
-    this.createDate
+    this.createDate,
   });
 }
 
@@ -50,15 +53,24 @@ class TraCuu {
   TraCuuBienNhanModel? traCuuBienNhan;
   List<TraCuuTTHCmodel>? traCuuTTHCmodel;
   ChiTietQuyHoachModel? chiTietQuyHoachModel;
-
   String? type;
+
+  List<BotMessage>? dataBot;
+  int? banKinh;
+  String? maLoaiDanhMuc;
+  String? tenDM;
+
   TraCuu(
       {this.data,
       this.type,
       this.data1,
       this.traCuuBienNhan,
       this.traCuuTTHCmodel,
-      this.chiTietQuyHoachModel});
+      this.chiTietQuyHoachModel,
+      this.dataBot,
+      this.banKinh,
+      this.tenDM,
+      this.maLoaiDanhMuc});
 }
 
 class ChiTietQuyHoachModel {

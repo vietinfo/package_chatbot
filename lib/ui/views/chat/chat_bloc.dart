@@ -24,6 +24,7 @@ class ChatBloc extends BaseBloc {
   final List<TraCuuDiaDiemModels> _traCuuDiaDiem = <TraCuuDiaDiemModels>[];
   List<ListDanhMuc> _listDanhMuc = <ListDanhMuc>[];
   List<PhuongXaModel> _listAllPX = <PhuongXaModel>[];
+  List<BotMessage> listBotMess = <BotMessage>[];
   bool _isCheckTTQH = false;
   String _tenPhuong = '';
   String _soTo = '';
@@ -268,18 +269,22 @@ class ChatBloc extends BaseBloc {
       if (value != null) {
         if (value.isNotEmpty) {
           if (value.length > 1) {
-            Get.to(
-                BlocProvider(
-                    child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-                arguments: {
-                  'lat': lat,
-                  'long': long,
-                  'banKinh': values.first.custom!.data!.banKinh,
-                  'tenDM': tinNhan,
-                  'result': value,
-                  'results': values,
-                  'checkDD': 1
-                });
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value[0], type: 'action_tra_cuu_dia_diem')));
+            _listMess.insert(
+                0,
+                ChatModel(
+                    isReadMore: (value.length == 2)?false:true,
+                    traCuu: TraCuu(
+                        dataBot: values,data1: value[1], type: 'action_tra_cuu_dia_diem')));
+
+            mess.sink.add(_listMess);
+
+
+
           } else {
             _listMess.insert(
                 0,
@@ -423,7 +428,6 @@ class ChatBloc extends BaseBloc {
       String? maLoaiDanhMuc,
       String? tenDM,
       int? pageNum}) {
-    // _listMess.insert(0, ChatModel(isCheckTraCuuDiaDiem: true));
     _traCuuDiaDiemAPI(
             lat: lat,
             long: long,
@@ -433,16 +437,30 @@ class ChatBloc extends BaseBloc {
         .then((value) {
       if (value != null) {
         if (value.isNotEmpty) {
-          Get.to(
-              BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-              arguments: {
-                'lat': lat,
-                'long': long,
-                'banKinh': banKinh,
-                'tenDM': tenDM,
-                'maLoaiDanhMuc': maLoaiDanhMuc,
-                'checkDD': 0
-              });
+          if (value.length > 1) {
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value[0], type: 'action_tra_cuu_dia_diem')));
+            _listMess.insert(
+                0,
+                ChatModel(
+                    isReadMore: (value.length == 2)?false:true,
+                    traCuu: TraCuu(banKinh: banKinh,tenDM: tenDM,maLoaiDanhMuc: maLoaiDanhMuc,data1: value[1], type: 'action_tra_cuu_dia_diem')));
+
+            mess.sink.add(_listMess);
+
+
+          } else {
+            _listMess.insert(
+                0,
+                ChatModel(
+                    traCuu: TraCuu(
+                        data1: value.first, type: 'action_tra_cuu_dia_diem')));
+            mess.sink.add(_listMess);
+          }
+
           isCheckLocation.sink.add({false: '1'});
         } else {
           _listMess.insert(
@@ -770,6 +788,64 @@ class ChatBloc extends BaseBloc {
 
       
     });
+  }
+
+  void readMoreDD(
+      TraCuu values,
+      String? tinNhan,
+      int? pageNum,
+      double? lat,
+      double? long,){
+    if(values.dataBot != null){
+      _traCuuDiaDiemAPI(
+          banKinh: values.dataBot!.first.custom!.data!.banKinh,
+          maLoaiDanhMuc: values.dataBot!.first.custom!.data!.maLoaiDanhMuc,
+          tenCoQuan: values.dataBot!.first.custom!.data!.tenCoQuan,
+          maCoQuan: values.dataBot!.first.custom!.data!.maCoQuan,
+          pageNum: 1)
+          .then((value) {
+        if (value != null) {
+          if (value.isNotEmpty) {
+            if (value.length > 1) {
+              Get.to(
+                  BlocProvider(
+                      child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+                  arguments: {
+                    'banKinh': values.dataBot!.first.custom!.data!.banKinh,
+                    'tenDM': tinNhan,
+                    'result': value,
+                    'results': values.dataBot,
+                    'checkDD': 1
+                  });
+            }
+          } else {
+            _listMess.insert(
+                0,
+                ChatModel(
+                  messRight:
+                  'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập, bạn vui lòng thử lại sau',
+                ));
+            mess.sink.add(_listMess);
+          }
+        } else {
+          troGiup();
+        }
+      });
+    }else{
+      Get.to(
+          BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+          arguments: {
+            'lat': lat,
+            'long': long,
+            'banKinh': values.banKinh,
+            'tenDM': values.tenDM,
+            'maLoaiDanhMuc': values.maLoaiDanhMuc,
+            'checkDD': 0
+          });
+    }
+
+
+
   }
 
   @override

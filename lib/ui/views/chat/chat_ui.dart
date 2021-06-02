@@ -11,6 +11,7 @@ import 'package:location/location.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/config/palettes.dart';
+import 'package:package_chatbot/core/model/botmessasge.dart';
 import 'package:package_chatbot/core/model/chatmodels.dart';
 import 'package:package_chatbot/core/model/ds_chu_nang_model.dart';
 import 'package:package_chatbot/core/model/phuongxamodel.dart';
@@ -906,7 +907,8 @@ class _ChatUIState extends State<ChatUI> {
                                             })
                                       ],
                                     ),
-                                  if (e.traCuu != null) _data(e.traCuu!)
+                                  if (e.traCuu != null)
+                                    _data(e.traCuu!, e.isReadMore)
                                 ],
                               );
                             }).toList(),
@@ -1204,11 +1206,11 @@ class _ChatUIState extends State<ChatUI> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        _chatBloc!.messDanhMuc(listDanhMuc: listDanhMuc[index]);
+                        _chatBloc.messDanhMuc(listDanhMuc: listDanhMuc[index]);
                         maLoaiDM = listDanhMuc[index].maLoaiDanhMuc;
                         tenDM = listDanhMuc[index].tenLoaiDanhMuc;
                         _checkTTQH = false;
-                        _chatBloc!.checkHuy.sink.add(false);
+                        _chatBloc.checkHuy.sink.add(false);
                         _scrollEndScreen();
                       },
                       child: Padding(
@@ -1296,151 +1298,180 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _data(TraCuu custom) {
+  Widget _data(TraCuu custom, bool readMore, ) {
     switch (custom.type) {
       case 'action_tra_cuu_dia_diem':
-        return Padding(
-          padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
-          child: Container(
-            constraints: const BoxConstraints(
-              maxHeight: double.infinity,
-            ),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(14)),
-                color: Color(0xffffffff)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.location_on),
-                      Expanded(
-                        child: Text(
-                          '${custom.data1!.tenCoQuan ?? ' '} ',
-                          style: const TextStyle(
-                              color: Palettes.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 15.0),
-                        ),
-                      )
-                    ],
-                  ),
+        return Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxHeight: double.infinity,
                 ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Điện thoại:',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15.0),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    color: Color(0xffffffff)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on),
+                          Expanded(
+                            child: Text(
+                              '${custom.data1!.tenCoQuan ?? ' '} ',
+                              style: const TextStyle(
+                                  color: Palettes.textColor,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 15.0),
+                            ),
+                          )
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () =>
-                            launch('tel://${custom.data1!.soDienThoai}'),
-                        child: Text(
-                          ' ${custom.data1!.soDienThoai ?? 'Số điện thoại hiện tại chưa được cập nhập'}',
-                          style: const TextStyle(
-                              color: Colors.red,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Website: ',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15.0),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _launchURL(custom.data1!.website!),
-                          child: Text(
-                            custom.data1!.website ?? ' Website hiện tại chưa được cập nhập',
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 15.0),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Địa chỉ: ',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15.0),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _openMapsSheet(custom.data1!.viDo!,
-                              custom.data1!.kinhDo!, custom.data1!.tenCoQuan!),
-                          child: Text(
-                            custom.data1!.diaChi!,
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 15.0),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                if (custom.data1!.distance != 0)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Divider(),
-                  ),
-                if (custom.data1!.distance != 0)
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'Vị trí này cách bạn ',
-                          style: TextStyle(
-                              fontStyle: FontStyle.normal, fontSize: 15.0),
-                        ),
-                        Text(
-                          '${NumberFormat("###", "en_US").format(custom.data1!.distance)}m ',
-                          style: const TextStyle(
-                              color: Colors.red,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 15.0),
-                        ),
-                      ],
                     ),
-                  ),
-              ],
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Điện thoại:',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 15.0),
+                          ),
+                          GestureDetector(
+                            onTap: () =>
+                                launch('tel://${custom.data1!.soDienThoai}'),
+                            child: Text(
+                              ' ${custom.data1!.soDienThoai ?? 'Số điện thoại hiện tại chưa được cập nhập'}',
+                              style: const TextStyle(
+                                  color: Colors.red,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Website: ',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 15.0),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => _launchURL(custom.data1!.website!),
+                              child: Text(
+                                custom.data1!.website ?? ' Website hiện tại chưa được cập nhập',
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: 15.0),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Địa chỉ: ',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 15.0),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => _openMapsSheet(custom.data1!.viDo!,
+                                  custom.data1!.kinhDo!, custom.data1!.tenCoQuan!),
+                              child: Text(
+                                custom.data1!.diaChi!,
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: 15.0),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    if (custom.data1!.distance != 0)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Divider(),
+                      ),
+                    if (custom.data1!.distance != 0)
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Vị trí này cách bạn ',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.normal, fontSize: 15.0),
+                            ),
+                            Text(
+                              '${NumberFormat("###", "en_US").format(custom.data1!.distance)}m ',
+                              style: const TextStyle(
+                                  color: Colors.red,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 15.0),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                  ],
+                ),
+              ),
             ),
-          ),
+            if(readMore) GestureDetector(
+              onTap: (){
+                _checkTTQH = false;
+                _checkTTHS = false;
+                _chatBloc.dsPhuongXa.sink.add([]);
+                _chatBloc.sendController.sink.add(false);
+                _chatBloc.checkHuy.sink.add(false);
+                _chatBloc.readMoreDD(custom,_mess.text, 1, lat, long);
+              },
+              child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8, bottom: 20),
+                    child: Text(
+                        "Xem tất cả",
+                        style: const TextStyle(
+                            color:  const Color(0xff47b0f0),
+                            fontStyle:  FontStyle.italic,
+                            fontSize: 17.0
+                        ),
+                    ),
+                  )),
+            )
+
+          ],
         );
       case 'action_tra_cuu_so_bien_nhan':
         return Padding(
