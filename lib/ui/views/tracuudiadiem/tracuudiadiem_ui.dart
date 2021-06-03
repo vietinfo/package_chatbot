@@ -19,7 +19,7 @@ class TraCuuDiaDiemUI extends StatefulWidget {
 class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
   late TraCuuDiaDiemBloc _traCuuDiaDiemBloc;
   late List<TraCuuDiaDiemModels> _traCuuDiaDiem;
-  late List<BotMessage> _botMess;
+  late List<dynamic> _botMess;
   late String _tenDM;
   late int _banKinh;
   late String _maLoaiDanhMuc;
@@ -54,10 +54,10 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
       _traCuuDiaDiemBloc.traCuuDD1(
           lat: _lat,
           long: _long,
-          banKinh: _botMess.first.custom!.data!.banKinh,
-          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
-          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
-          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
+          banKinh: _botMess.first['custom']['data']['banKinh'],
+          maLoaiDanhMuc: _botMess.first['custom']['data']['maLoaiDanhMuc'],
+          tenCoQuan: _botMess.first['custom']['data']['tenCoQuan'],
+          maCoQuan: _botMess.first['custom']['data']['maCoQuan'],
           pageNum: _pageNum);
     }
   }
@@ -301,10 +301,10 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
       _traCuuDiaDiemBloc.traCuuDD1(
           lat: _lat,
           long: _long,
-          banKinh: _botMess.first.custom!.data!.banKinh,
-          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
-          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
-          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
+          banKinh:  _botMess.first['custom']['data']['banKinh'],
+          maLoaiDanhMuc:  _botMess.first['custom']['data']['maLoaiDanhMuc'],
+          tenCoQuan:  _botMess.first['custom']['data']['tenCoQuan'],
+          maCoQuan:  _botMess.first['custom']['data']['maCoQuan'],
           pageNum: _pageNum++);
     }
   }

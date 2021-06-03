@@ -63,6 +63,8 @@ class HttpRequest {
     }
   }
 
+
+
   Future<String?> download1(String url, savePath, {Function? callBack}) async {
     final CancelToken cancelToken = CancelToken();
     try {

@@ -185,3 +185,43 @@ Future<ChiTietQuyHoachModel?> _getUrlTraCuuQuyHoachAPI(String thongTin) async {
   }
   return null;
 }
+
+@protected
+Future<List<ChatModel>?> _getAllHistoryChat(String userName) async {
+  final String _url = LocalVariable.urlAPI + '/api/Home/GetAllHistoryChat/$userName';
+
+  final String? json =
+  await HttpRequest.instance.getAsync(_url);
+  if (json == null) {
+    return null;
+  }
+
+  final data = jsonDecode(json);
+  List<ChatModel> _listData = <ChatModel>[];
+  if (data['result'] != null) {
+    final result = data['result'] as List;
+    _listData =
+        result.map((tagJson) => ChatModel.fromJson(tagJson)).toList();
+    return _listData.reversed.toList();
+  }
+  return null;
+}
+
+@protected
+Future<bool> _insertHistoryChat(var param) async {
+  final String _url = LocalVariable.urlAPI + '/api/Home/InsertHistoryChat';
+
+
+  final String? json =
+  await HttpRequest.instance.postAsync(_url, param);
+  if (json == null) {
+    return false;
+  }
+
+  final data = jsonDecode(json);
+  if (data['result'] != null) {
+    return true;
+  }
+  return false;
+}
+

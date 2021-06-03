@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:extended_image/extended_image.dart';
@@ -55,6 +56,7 @@ class _ChatUIState extends State<ChatUI> {
   int _isCheckTTHS = 0;
   double? lat;
   double? long;
+  late String userName;
 
   String? maLoaiDM;
   List<PhuongXaModel> _listPhuongXa = <PhuongXaModel>[];
@@ -92,8 +94,9 @@ class _ChatUIState extends State<ChatUI> {
     super.initState();
     listScrollController = ScrollController();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
+    userName = '....';
     _getLocation();
-    _chatBloc.sendMessAPI('null');
+    _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName);
   }
 
   @override
@@ -155,21 +158,21 @@ class _ChatUIState extends State<ChatUI> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  _chatBloc.restart();
-                  _mess.clear();
-                  _checkTTQH = false;
-                  _checkTTHS = false;
-                  _chatBloc.dsPhuongXa.sink.add([]);
-                  _chatBloc.sendController.sink.add(false);
-                  _chatBloc.checkHuy.sink.add(false);
-                },
-                child: const Icon(
-                  Icons.refresh,
-                  size: 25,
-                ),
-              )
+              // InkWell(
+              //   onTap: () {
+              //     _chatBloc.restart();
+              //     _mess.clear();
+              //     _checkTTQH = false;
+              //     _checkTTHS = false;
+              //     _chatBloc.dsPhuongXa.sink.add([]);
+              //     _chatBloc.sendController.sink.add(false);
+              //     _chatBloc.checkHuy.sink.add(false);
+              //   },
+              //   child: const Icon(
+              //     Icons.refresh,
+              //     size: 25,
+              //   ),
+              // )
             ],
           ),
         )),
@@ -203,6 +206,7 @@ class _ChatUIState extends State<ChatUI> {
                                 onTap: () {
                                   if (snapshot.data!.values.first != '1') {
                                     _chatBloc.traCuuDD(
+                                        userName: userName,
                                       lat: lat,
                                         long: long,
                                         banKinh: bk500,
@@ -212,6 +216,7 @@ class _ChatUIState extends State<ChatUI> {
                                         pageNum: _pageNum);
                                   } else {
                                     _chatBloc.traCuuDD(
+                                      userName: userName,
                                         lat: lat,
                                         long: long,
                                         banKinh: bk500,
@@ -246,8 +251,6 @@ class _ChatUIState extends State<ChatUI> {
                               ),
                               GestureDetector(
                                 onTap: () {
-
-
                                   if (snapshot.data!.values.first != '1') {
                                     _chatBloc.traCuuDD(
                                         lat: lat,
@@ -411,6 +414,7 @@ class _ChatUIState extends State<ChatUI> {
                                                       context: context,
                                                       bodyBuilder: (context) =>
                                                           ListItems(
+                                                            userName,
                                                         _danhMucChucNangModels,
                                                         _chatBloc,
                                                         _scrollEndScreen,
@@ -559,6 +563,7 @@ class _ChatUIState extends State<ChatUI> {
                                                               bodyBuilder:
                                                                   (context) =>
                                                                       ListItems(
+                                                                        userName,
                                                                 _danhMucChucNangModels,
                                                                 _chatBloc,
                                                                 _scrollEndScreen,
@@ -828,21 +833,21 @@ class _ChatUIState extends State<ChatUI> {
                           _chatModel = snapshot.data;
 
                           // kiem tra thong tin quy hoach tu bot tra ra
-                          if (_chatModel!.first.isTTQH) {
-                            _checkTTQH = _chatModel!.first.isTTQH;
+                          if (_chatModel!.first.isTTQH!) {
+                            _checkTTQH = _chatModel!.first.isTTQH!;
                           }
 
-                          if (_chatModel!.first.isTTQHEnd) {
+                          if (_chatModel!.first.isTTQHEnd!) {
                             _checkTTQH = false;
-                            _checkTTQH1 = _chatModel!.first.isTTQHEnd;
+                            _checkTTQH1 = _chatModel!.first.isTTQHEnd!;
                           } else {
                             _checkTTQH1 = false;
                           }
                           //--------------------------------------//
 
                           // kiem tra sô bien nhan tu bot tra ra
-                          if (_chatModel!.first.isTTHS) {
-                            _checkTTHS = _chatModel!.first.isTTHS;
+                          if (_chatModel!.first.isTTHS!) {
+                            _checkTTHS = _chatModel!.first.isTTHS!;
                           }
                           //  = 1 dang nhap sai ma bien nhan
                           if (_chatModel!.first.isTTHSEnd == 1) {
@@ -909,7 +914,8 @@ class _ChatUIState extends State<ChatUI> {
                                       ],
                                     ),
                                   if (e.traCuu != null)
-                                    _data(e.traCuu!, e.isReadMore)
+                                    _data(e.traCuu!, e.isReadMore!)
+
                                 ],
                               );
                             }).toList(),
@@ -1005,7 +1011,7 @@ class _ChatUIState extends State<ChatUI> {
                       if (snapshot.data!) {
                         return GestureDetector(
                           onTap: () {
-                            _chatBloc.sendHuyTraCuu(value: 'Hủy');
+                            _chatBloc.sendHuyTraCuu(userName,value: 'Hủy');
                             _mess.clear();
                             _chatBloc.sendController.sink.add(false);
                           },
@@ -1119,7 +1125,8 @@ class _ChatUIState extends State<ChatUI> {
                   }
 
                   _chatBloc.sendMessAPI(
-                      _danhMucChucNangModels![index].tenChucNang!,
+                    userName: userName,
+                      tinNhan: _danhMucChucNangModels![index].tenChucNang!,
                       maChucNang: _danhMucChucNangModels![index].maChucNang!,
                       listDanhMuc: _danhMucChucNangModels![index].listDanhMuc);
                   _scrollEndScreen();
@@ -1186,7 +1193,8 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _buildColumnDM(List<ListDanhMuc> listDanhMuc) {
+  Widget _buildColumnDM(String listDanhMucs) {
+    var listDanhMuc = jsonDecode(listDanhMucs);
     return Align(
       alignment: Alignment.bottomLeft,
       child: Padding(
@@ -1207,9 +1215,9 @@ class _ChatUIState extends State<ChatUI> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        _chatBloc.messDanhMuc(listDanhMuc: listDanhMuc[index]);
-                        maLoaiDM = listDanhMuc[index].maLoaiDanhMuc;
-                        tenDM = listDanhMuc[index].tenLoaiDanhMuc;
+                        _chatBloc.messDanhMuc(userName: userName,tenDanhMuc: listDanhMuc[index]['tenLoaiDanhMuc']);
+                        maLoaiDM = listDanhMuc[index]['maLoaiDanhMuc'];
+                        tenDM = listDanhMuc[index]['tenLoaiDanhMuc'];
                         _checkTTQH = false;
                         _chatBloc.checkHuy.sink.add(false);
                         _scrollEndScreen();
@@ -1225,7 +1233,7 @@ class _ChatUIState extends State<ChatUI> {
                           ),
                           child: Center(
                             child: Text(
-                              listDanhMuc[index].tenLoaiDanhMuc!,
+                              listDanhMuc[index]['tenLoaiDanhMuc'],
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Palettes.textColor,
@@ -1244,7 +1252,8 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _buildColumnTTHC(List<TraCuuTTHCmodel> listTTHC) {
+  Widget _buildColumnTTHC(String listTTHCs) {
+    var listTTHC = jsonDecode(listTTHCs);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -1263,8 +1272,8 @@ class _ChatUIState extends State<ChatUI> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      _chatBloc.getDSTTHC(listTTHC[index].linhVucID!,
-                          tinNhan: listTTHC[index].tenLinhVuc!);
+                      _chatBloc.getDSTTHC(userName,listTTHC[index]['linhVucID'],
+                          tinNhan: listTTHC[index]['tenLinhVuc']);
                       _checkTTQH = false;
                       _scrollEndScreen();
                       _chatBloc.checkHuy.sink.add(false);
@@ -1282,7 +1291,7 @@ class _ChatUIState extends State<ChatUI> {
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            listTTHC[index].tenLinhVuc!,
+                            listTTHC[index]['tenLinhVuc'],
                             style: const TextStyle(
                                 color: Color(0xff364761),
                                 fontWeight: FontWeight.bold,
@@ -1299,14 +1308,17 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _data(TraCuu custom, bool readMore, ) {
-    switch (custom.type) {
+  Widget _data(String customs, bool readMore, ) {
+    var custom = jsonDecode(customs);
+    print(custom);
+    switch (custom['type']) {
       case 'action_tra_cuu_dia_diem':
+        var data = jsonDecode(custom['data1']);
         return Column(
           children: [
             Padding(
               padding:
-                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
+              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
               child: Container(
                 constraints: const BoxConstraints(
                   maxHeight: double.infinity,
@@ -1324,7 +1336,7 @@ class _ChatUIState extends State<ChatUI> {
                           const Icon(Icons.location_on),
                           Expanded(
                             child: Text(
-                              '${custom.data1!.tenCoQuan ?? ' '} ',
+                              '${data['tenCoQuan'] ?? ' '} ',
                               style: const TextStyle(
                                   color: Palettes.textColor,
                                   fontStyle: FontStyle.normal,
@@ -1348,9 +1360,9 @@ class _ChatUIState extends State<ChatUI> {
                           ),
                           GestureDetector(
                             onTap: () =>
-                                launch('tel://${custom.data1!.soDienThoai}'),
+                                launch('tel://${data['soDienThoai']}'),
                             child: Text(
-                              ' ${custom.data1!.soDienThoai ?? 'Số điện thoại hiện tại chưa được cập nhập'}',
+                              ' ${data['soDienThoai'] ?? 'Số điện thoại hiện tại chưa được cập nhập'}',
                               style: const TextStyle(
                                   color: Colors.red,
                                   fontStyle: FontStyle.normal,
@@ -1376,9 +1388,9 @@ class _ChatUIState extends State<ChatUI> {
                           ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => _launchURL(custom.data1!.website!),
+                              onTap: () => _launchURL(data['website']),
                               child: Text(
-                                custom.data1!.website ?? ' Website hiện tại chưa được cập nhập',
+                                data['website'] ?? ' Website hiện tại chưa được cập nhập',
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontStyle: FontStyle.normal,
@@ -1404,10 +1416,10 @@ class _ChatUIState extends State<ChatUI> {
                           ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => _openMapsSheet(custom.data1!.viDo!,
-                                  custom.data1!.kinhDo!, custom.data1!.tenCoQuan!),
+                              onTap: () => _openMapsSheet(data['viDo'],
+                                  data['kinhDo'], data['tenCoQuan']),
                               child: Text(
-                                custom.data1!.diaChi!,
+                                data['diaChi'],
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontStyle: FontStyle.normal,
@@ -1418,12 +1430,12 @@ class _ChatUIState extends State<ChatUI> {
                         ],
                       ),
                     ),
-                    if (custom.data1!.distance != 0)
+                    if (data['distance'] != 0)
                       const Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: Divider(),
                       ),
-                    if (custom.data1!.distance != 0)
+                    if (data['distance'] != 0)
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Row(
@@ -1434,7 +1446,7 @@ class _ChatUIState extends State<ChatUI> {
                                   fontStyle: FontStyle.normal, fontSize: 15.0),
                             ),
                             Text(
-                              '${NumberFormat("###", "en_US").format(custom.data1!.distance)}m ',
+                              '${NumberFormat("###", "en_US").format(data['distance'])}m ',
                               style: const TextStyle(
                                   color: Colors.red,
                                   fontStyle: FontStyle.normal,
@@ -1455,19 +1467,19 @@ class _ChatUIState extends State<ChatUI> {
                 _chatBloc.dsPhuongXa.sink.add([]);
                 _chatBloc.sendController.sink.add(false);
                 _chatBloc.checkHuy.sink.add(false);
-                _chatBloc.readMoreDD(custom,_mess.text, 1, lat, long);
+                _chatBloc.readMoreDD(userName,custom,_mess.text, 1, lat, long);
               },
               child: Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8, bottom: 20),
                     child: Text(
-                        "Xem tất cả",
-                        style: const TextStyle(
-                            color:  const Color(0xff47b0f0),
-                            fontStyle:  FontStyle.italic,
-                            fontSize: 17.0
-                        ),
+                      "Xem tất cả",
+                      style: const TextStyle(
+                          color:  const Color(0xff47b0f0),
+                          fontStyle:  FontStyle.italic,
+                          fontSize: 17.0
+                      ),
                     ),
                   )),
             )
@@ -1475,6 +1487,7 @@ class _ChatUIState extends State<ChatUI> {
           ],
         );
       case 'action_tra_cuu_so_bien_nhan':
+        var dataTraCuuBienNhan = jsonDecode(custom['traCuuBienNhan']);
         return Padding(
           padding:
               const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
@@ -1510,7 +1523,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          ' ${custom.traCuuBienNhan!.tenThuTuc}',
+                          ' ${dataTraCuuBienNhan['tenThuTuc']}',
                           style: const TextStyle(
                               color: Colors.blue,
                               fontStyle: FontStyle.normal,
@@ -1535,7 +1548,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          ' ${custom.traCuuBienNhan!.soBienNhan}',
+                          ' ${dataTraCuuBienNhan['soBienNhan']}',
                           style: const TextStyle(
                               color: Colors.red,
                               fontStyle: FontStyle.normal,
@@ -1559,7 +1572,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          ' ${custom.traCuuBienNhan!.nguoiDungTenHoSo}',
+                          ' ${dataTraCuuBienNhan['nguoiDungTenHoSo']}',
                           style: const TextStyle(
                               fontStyle: FontStyle.normal, fontSize: 15.0),
                         ),
@@ -1581,7 +1594,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(custom.traCuuBienNhan!.ngayNhan!))} ',
+                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(dataTraCuuBienNhan['ngayNhan']))} ',
                           style: const TextStyle(
                               fontStyle: FontStyle.normal, fontSize: 15.0),
                         ),
@@ -1603,7 +1616,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(custom.traCuuBienNhan!.ngayHenTra!))} ',
+                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(dataTraCuuBienNhan['ngayHenTra']))} ',
                           style: const TextStyle(
                               color: Colors.red,
                               fontStyle: FontStyle.normal,
@@ -1627,7 +1640,7 @@ class _ChatUIState extends State<ChatUI> {
                       ),
                       Expanded(
                         child: Text(
-                          '${custom.traCuuBienNhan!.tinhTrangHoSo} ',
+                          '${dataTraCuuBienNhan['tinhTrangHoSo']} ',
                           style: const TextStyle(
                               color: Colors.green,
                               fontStyle: FontStyle.normal,
@@ -1642,10 +1655,11 @@ class _ChatUIState extends State<ChatUI> {
           ),
         );
       case 'action_tra_cuu_thu_tuc_hanh_chinh':
+        var data = jsonDecode(custom['traCuuTTHCmodel']);
         return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: custom.traCuuTTHCmodel!.length,
+            itemCount: data.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -1654,7 +1668,7 @@ class _ChatUIState extends State<ChatUI> {
                       BlocProvider(
                           child: ChiTietThuTucUI(), bloc: ChiTietThuTucBloc()),
                       arguments: {
-                        'result': custom.traCuuTTHCmodel![index].thuTucID
+                        'result': data[index]['thuTucID']
                       });
                 },
                 child: Padding(
@@ -1677,7 +1691,7 @@ class _ChatUIState extends State<ChatUI> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  custom.traCuuTTHCmodel![index].tenThuTuc!,
+                                  data[index]['tenThuTuc'],
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
@@ -1699,11 +1713,12 @@ class _ChatUIState extends State<ChatUI> {
               );
             });
       case 'action_tra_cuu_thong_tin_quy_hoach':
+        var dataTraCuuTTQH = jsonDecode(custom['chiTietQuyHoachModel']);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration:
-                BoxDecoration(border: Border.all(color: Colors.black12)),
+            BoxDecoration(border: Border.all(color: Colors.black12)),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
@@ -1714,21 +1729,21 @@ class _ChatUIState extends State<ChatUI> {
                     color: Colors.grey.shade300,
                     child: const Center(
                         child: Text(
-                      'Thông tin thửa đất',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
+                          'Thông tin thửa đất',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
                   ),
                   Text.rich(TextSpan(children: [
                     const TextSpan(
                       text: 'Địa chỉ: ',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
-                      text: custom.chiTietQuyHoachModel!.tenXa ?? '',
+                      text: dataTraCuuTTQH['tenXa'] ?? '',
                       style: const TextStyle(color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
@@ -1736,10 +1751,10 @@ class _ChatUIState extends State<ChatUI> {
                     const TextSpan(
                       text: 'Số hiệu tờ bản đồ: ',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
-                      text: custom.chiTietQuyHoachModel!.soHieuToBanDo!,
+                      text: dataTraCuuTTQH['soHieuToBanDo'],
                       style: const TextStyle(color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
@@ -1747,10 +1762,10 @@ class _ChatUIState extends State<ChatUI> {
                     const TextSpan(
                       text: 'Số thứ tự thửa: ',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
-                      text: custom.chiTietQuyHoachModel!.soThuTuThua!,
+                      text: dataTraCuuTTQH['soThuTuThua'],
                       style: const TextStyle(color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
@@ -1758,10 +1773,10 @@ class _ChatUIState extends State<ChatUI> {
                     const TextSpan(
                       text: 'Diện tích: ',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
-                      text: custom.chiTietQuyHoachModel!.dienTich.toString(),
+                      text:  dataTraCuuTTQH['dienTich'].toString(),
                       style: const TextStyle(color: Colors.redAccent, fontSize: 15),
                     ),
                     const TextSpan(
@@ -1779,15 +1794,15 @@ class _ChatUIState extends State<ChatUI> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         TextSpan(
-                          text: custom.chiTietQuyHoachModel!.tenLoaiDat ??
+                          text: dataTraCuuTTQH['tenLoaiDat'] ??
                               'Đang cập nhật',
                           style:
-                              const TextStyle(color: Colors.redAccent, fontSize: 15),
+                          const TextStyle(color: Colors.redAccent, fontSize: 15),
                         ),
                       ])),
                       InkWell(
                         onTap: () => Get.to(WebViewWidget(
-                            custom.chiTietQuyHoachModel!.gisUrl!)),
+                            dataTraCuuTTQH['gisUrl'])),
                         child: const Text(
                           'Xem chi tiết',
                           style: TextStyle(
@@ -1824,7 +1839,7 @@ class _ChatUIState extends State<ChatUI> {
     _checkPX++;
 
     if (value.trim().isNotEmpty) {
-      _chatBloc.sendThongTinPhuongXa(tinNhan: value, isCheck: _checkPX);
+      _chatBloc.sendThongTinPhuongXa(userName,tinNhan: value, isCheck: _checkPX);
     }
     if (_checkPX == 3) {
       _checkPX = 0;
@@ -1838,7 +1853,7 @@ class _ChatUIState extends State<ChatUI> {
     if (_isCheckTTHS == 0) {
       _checkHS++;
       if (value.trim().isNotEmpty) {
-        _chatBloc.sendThongTinHoSo(tinNhan: value, isCheckTTHS: _checkHS);
+        _chatBloc.sendThongTinHoSo(userName,tinNhan: value, isCheckTTHS: _checkHS);
       }
     }
   }
@@ -1866,7 +1881,7 @@ class _ChatUIState extends State<ChatUI> {
   void _sendBot() {
     if (_mess.text.trim().isNotEmpty) {
       _chatBloc
-          .sendMessBot(_mess.text, danhMucChucNang: _danhMucChucNangModels,lat: lat, long: long);
+          .sendMessBot(userName,_mess.text, danhMucChucNang: _danhMucChucNangModels,lat: lat, long: long);
 
       _chatBloc.sendController.sink.add(false);
       _mess.clear();
