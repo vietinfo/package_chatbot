@@ -32,10 +32,17 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: const BackButton(
-          color: Colors.black,
-        ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Color(0xff205072),
+            ),
+          ),
+          const Spacer(),
           GestureDetector(
             onTap: (){
               showBotom(_files!);

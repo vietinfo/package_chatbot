@@ -7,6 +7,7 @@ import 'package:package_chatbot/ui/views/chat/chat_bloc.dart';
 import 'package:package_chatbot/ui/widgets/disable_glow_listview.dart';
 
 class ListItems extends StatelessWidget {
+  final String userName;
   final List<DanhMucChucNangModels>? _danhMucChucNangModels;
   final ChatBloc _chatBloc;
   final Function(bool isCheckTTHS)? checkTTHS;
@@ -14,7 +15,7 @@ class ListItems extends StatelessWidget {
   final Function()? scoll;
 
 
-  const ListItems(this._danhMucChucNangModels, this._chatBloc, this.scoll,{this.checkTTHS, this.checkTTQH});
+  const ListItems(this.userName,this._danhMucChucNangModels, this._chatBloc, this.scoll,{this.checkTTHS, this.checkTTQH});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,8 @@ class ListItems extends StatelessWidget {
                           }
                           scoll!();
                           _chatBloc.sendMessAPI(
-                              _danhMucChucNangModels![index].tenChucNang!,
+                              userName: userName,
+                             tinNhan:  _danhMucChucNangModels![index].tenChucNang!,
                               maChucNang:
                                   _danhMucChucNangModels![index].maChucNang!,
                               listDanhMuc:
