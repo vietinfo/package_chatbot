@@ -60,6 +60,7 @@ class _ChatUIState extends State<ChatUI> {
 
   String? maLoaiDM;
   List<PhuongXaModel> _listPhuongXa = <PhuongXaModel>[];
+  final FocusNode focusNode = FocusNode();
 
   late ScrollController listScrollController;
 
@@ -94,7 +95,7 @@ class _ChatUIState extends State<ChatUI> {
     super.initState();
     listScrollController = ScrollController();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
-    userName = '....';
+    userName = 'Nhan_soi1';
     _getLocation();
     _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName);
   }
@@ -114,7 +115,7 @@ class _ChatUIState extends State<ChatUI> {
                   Get.back();
                 },
                 icon: const Icon(
-                  Icons.arrow_back,
+                  Icons.arrow_back_ios,
                   color: Color(0xff205072),
                 ),
               ),
@@ -144,12 +145,12 @@ class _ChatUIState extends State<ChatUI> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const[
-                     Text(
+                  children: const [
+                    Text(
                       'UBND huyện Hóc Môn',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                      style:  TextStyle(
+                      style: TextStyle(
                           fontSize: 13,
                           // fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w600,
@@ -207,7 +208,7 @@ class _ChatUIState extends State<ChatUI> {
                                   if (snapshot.data!.values.first != '1') {
                                     _chatBloc.traCuuDD(
                                         userName: userName,
-                                      lat: lat,
+                                        lat: lat,
                                         long: long,
                                         banKinh: bk500,
                                         maLoaiDanhMuc:
@@ -216,7 +217,7 @@ class _ChatUIState extends State<ChatUI> {
                                         pageNum: _pageNum);
                                   } else {
                                     _chatBloc.traCuuDD(
-                                      userName: userName,
+                                        userName: userName,
                                         lat: lat,
                                         long: long,
                                         banKinh: bk500,
@@ -292,7 +293,6 @@ class _ChatUIState extends State<ChatUI> {
                               ),
                               GestureDetector(
                                 onTap: () {
-
                                   if (snapshot.data!.values.first != '1') {
                                     _chatBloc.traCuuDD(
                                         lat: lat,
@@ -364,43 +364,30 @@ class _ChatUIState extends State<ChatUI> {
                           Align(
                             alignment: Alignment.bottomLeft,
                             child: Container(
-                              height: 60,
+                              height: 50,
                               color: Palettes.backGroundColor,
                               child: Row(
                                 children: [
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        boxShadow:const [
-                                           BoxShadow(
-                                              offset: Offset(0, 3),
-                                              blurRadius: 5,
-                                              color: Colors.grey)
-                                        ],
                                       ),
                                       child: Row(
                                         children: [
                                           GestureDetector(
                                             child: (_keyboardIsVisible())
                                                 ? const Padding(
-                                                    padding:
-                                                         EdgeInsets.only(
-                                                            left: 5),
+                                                    padding: EdgeInsets.only(
+                                                        left: 5),
                                                     child: Icon(
                                                       Icons.keyboard,
                                                       size: 25,
                                                     ),
                                                   )
                                                 : const Padding(
-                                                    padding:
-                                                         EdgeInsets.only(
-                                                            left: 5),
+                                                    padding: EdgeInsets.only(
+                                                        left: 5),
                                                     child: Icon(
                                                       Icons.menu,
                                                       size: 25,
@@ -414,7 +401,7 @@ class _ChatUIState extends State<ChatUI> {
                                                       context: context,
                                                       bodyBuilder: (context) =>
                                                           ListItems(
-                                                            userName,
+                                                        userName,
                                                         _danhMucChucNangModels,
                                                         _chatBloc,
                                                         _scrollEndScreen,
@@ -443,10 +430,11 @@ class _ChatUIState extends State<ChatUI> {
                                             },
                                           ),
                                           const SizedBox(width: 5),
-                                          Expanded(
-                                            child: TextFormField(
+                                          Flexible(
+                                            child: TextField(
                                                 controller: _mess,
-                                                decoration: const InputDecoration(
+                                                decoration:
+                                                    const InputDecoration(
                                                   contentPadding:
                                                       EdgeInsets.symmetric(
                                                           vertical: 10.0,
@@ -476,8 +464,8 @@ class _ChatUIState extends State<ChatUI> {
                                               }
                                             },
                                             child: const Padding(
-                                              padding:  EdgeInsets.only(
-                                                  right: 5),
+                                              padding:
+                                                  EdgeInsets.only(right: 5),
                                               child: Icon(
                                                 Icons.send,
                                                 color: Colors.blue,
@@ -505,25 +493,15 @@ class _ChatUIState extends State<ChatUI> {
                                 return Column(
                                   children: [
                                     Container(
-                                      height: 60,
+                                      height: 50,
                                       color: const Color(0xffF1F1F1),
                                       child: Row(
                                         children: [
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
                                           Expanded(
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                boxShadow:const [
-                                                  BoxShadow(
-                                                      offset: Offset(0, 3),
-                                                      blurRadius: 5,
-                                                      color: Colors.grey)
-                                                ],
+
                                               ),
                                               child: Row(
                                                 children: [
@@ -531,9 +509,8 @@ class _ChatUIState extends State<ChatUI> {
                                                     child:
                                                         (_keyboardIsVisible())
                                                             ? const Padding(
-                                                                padding:
-                                                                     EdgeInsets
-                                                                            .only(
+                                                                padding: EdgeInsets
+                                                                    .only(
                                                                         left:
                                                                             5),
                                                                 child: Icon(
@@ -543,9 +520,8 @@ class _ChatUIState extends State<ChatUI> {
                                                                 ),
                                                               )
                                                             : const Padding(
-                                                                padding:
-                                                                     EdgeInsets
-                                                                            .only(
+                                                                padding: EdgeInsets
+                                                                    .only(
                                                                         left:
                                                                             5),
                                                                 child: Icon(
@@ -563,7 +539,7 @@ class _ChatUIState extends State<ChatUI> {
                                                               bodyBuilder:
                                                                   (context) =>
                                                                       ListItems(
-                                                                        userName,
+                                                                userName,
                                                                 _danhMucChucNangModels,
                                                                 _chatBloc,
                                                                 _scrollEndScreen,
@@ -590,7 +566,7 @@ class _ChatUIState extends State<ChatUI> {
                                                               },
                                                               arrowHeight: 15,
                                                               transitionDuration:
-                                                              const Duration(
+                                                                  const Duration(
                                                                       milliseconds:
                                                                           200),
                                                               arrowDxOffset:
@@ -598,45 +574,48 @@ class _ChatUIState extends State<ChatUI> {
                                                             );
                                                     },
                                                   ),
-                                                  Expanded(
-                                                    child: TextFormField(
-                                                      controller: _mess,
-                                                      textInputAction:
-                                                          TextInputAction
-                                                              .newline,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        contentPadding:
-                                                            EdgeInsets
-                                                                .symmetric(
-                                                                    vertical:
-                                                                        10.0,
-                                                                    horizontal:
-                                                                        10.0),
-                                                        hintText:
-                                                            'Nhập tại đây .......',
-                                                        hintStyle: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 14),
-                                                        border:
-                                                            InputBorder.none,
-                                                      ),
-                                                      keyboardType:
-                                                          TextInputType
-                                                              .multiline,
-                                                      textCapitalization:
-                                                          TextCapitalization
-                                                              .sentences,
-                                                      onChanged: (value) {
-                                                        _soanTinNhan(value);
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: TextField(
+                                                        focusNode: focusNode,
+                                                        controller: _mess,
+                                                        textInputAction:
+                                                            TextInputAction
+                                                                .newline,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          contentPadding:
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          15.0,
+                                                                      horizontal:
+                                                                          15.0),
+                                                          hintText:
+                                                              'Nhập tại đây .......',
+                                                          hintStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontSize: 14),
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .multiline,
+                                                        textCapitalization:
+                                                            TextCapitalization
+                                                                .sentences,
+                                                        onChanged: (value) {
+                                                          _soanTinNhan(value);
 
-                                                        ///aaaaaa
-                                                        if (_checkTTQH) {
-                                                          _checkThongTinQuyHoach(
-                                                              value);
-                                                        }
-                                                      },
+                                                          ///aaaaaa
+                                                          if (_checkTTQH) {
+                                                            _checkThongTinQuyHoach(
+                                                                value);
+                                                          }
+                                                        },
+                                                      ),
                                                     ),
                                                   ),
                                                   if (snapshot.data!)
@@ -656,53 +635,42 @@ class _ChatUIState extends State<ChatUI> {
                                                       },
                                                       child: const Padding(
                                                         padding:
-                                                             EdgeInsets
-                                                                    .only(
-                                                                right: 10),
+                                                            EdgeInsets.only(
+                                                                right: 5),
                                                         child: Icon(
                                                           Icons.send,
                                                           color: Colors.blue,
                                                         ),
                                                       ),
-                                                    )
+                                                    ),
+                                                  Padding(
+                                                    padding:
+                                                    const EdgeInsets.only(right: 15),
+                                                    child: (snapshot.data!)
+                                                        ? const SizedBox.shrink()
+                                                        : InkWell(
+                                                      onTap: () => showMicSheet(
+                                                          homeContext:
+                                                          this.context,
+                                                          resultSpeech:
+                                                          _voiceCheck),
+                                                      child: const Padding(
+                                                        padding:
+                                                        EdgeInsets.only(
+                                                            top: 2,
+                                                            bottom: 2),
+                                                        child: Icon(
+                                                          Icons.keyboard_voice,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(width: 5),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 5),
-                                            child: (snapshot.data!)
-                                                ? const SizedBox.shrink()
-                                                : InkWell(
-                                                    onTap: () => showMicSheet(
-                                                        homeContext:
-                                                            this.context,
-                                                        resultSpeech:
-                                                            _voiceCheck),
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              15.0),
-                                                      decoration: const BoxDecoration(
-                                                          color: Colors.blue,
-                                                          shape:
-                                                              BoxShape.circle),
-                                                      child: const Padding(
-                                                        padding:
-                                                             EdgeInsets
-                                                                    .only(
-                                                                top: 2,
-                                                                bottom: 2),
-                                                        child: Icon(
-                                                          Icons.keyboard_voice,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                          )
+
                                         ],
                                       ),
                                     ),
@@ -716,7 +684,7 @@ class _ChatUIState extends State<ChatUI> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 60),
+              padding: const EdgeInsets.only(bottom: 50),
               child: StreamBuilder(
                   stream: _chatBloc.dsPhuongXa.stream,
                   builder:
@@ -896,8 +864,7 @@ class _ChatUIState extends State<ChatUI> {
                                     Column(
                                       children: [
                                         StreamBuilder(
-                                            stream:
-                                                _chatBloc.dsChucNang.stream,
+                                            stream: _chatBloc.dsChucNang.stream,
                                             builder: (context,
                                                 AsyncSnapshot<
                                                         List<
@@ -915,13 +882,19 @@ class _ChatUIState extends State<ChatUI> {
                                     ),
                                   if (e.traCuu != null)
                                     _data(e.traCuu!, e.isReadMore!)
-
                                 ],
                               );
                             }).toList(),
                           );
                         } else {
-                          return const SizedBox.shrink();
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ),
+                          );
                         }
                       }),
                 ),
@@ -935,16 +908,16 @@ class _ChatUIState extends State<ChatUI> {
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData && snapshot.data!) {
                       return Row(
-                        children:const [
-                           SpinKitWanderingCubes(
+                        children: const [
+                          SpinKitWanderingCubes(
                             color: Colors.cyan,
                             shape: BoxShape.circle,
                             size: 10,
                           ),
-                           SizedBox(
+                          SizedBox(
                             width: 3,
                           ),
-                           Text(
+                          Text(
                             'Đang soạn tin',
                             style: TextStyle(
                                 fontStyle: FontStyle.italic,
@@ -1011,7 +984,7 @@ class _ChatUIState extends State<ChatUI> {
                       if (snapshot.data!) {
                         return GestureDetector(
                           onTap: () {
-                            _chatBloc.sendHuyTraCuu(userName,value: 'Hủy');
+                            _chatBloc.sendHuyTraCuu(userName, value: 'Hủy');
                             _mess.clear();
                             _chatBloc.sendController.sink.add(false);
                           },
@@ -1019,7 +992,7 @@ class _ChatUIState extends State<ChatUI> {
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius:
-                                  const BorderRadius.all(  Radius.circular(10)),
+                                  const BorderRadius.all(Radius.circular(10)),
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
@@ -1125,7 +1098,7 @@ class _ChatUIState extends State<ChatUI> {
                   }
 
                   _chatBloc.sendMessAPI(
-                    userName: userName,
+                      userName: userName,
                       tinNhan: _danhMucChucNangModels![index].tenChucNang!,
                       maChucNang: _danhMucChucNangModels![index].maChucNang!,
                       listDanhMuc: _danhMucChucNangModels![index].listDanhMuc);
@@ -1157,7 +1130,8 @@ class _ChatUIState extends State<ChatUI> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 8, left: 8, top: 8),
+                        padding:
+                            const EdgeInsets.only(right: 8, left: 8, top: 8),
                         child: Column(
                           children: <Widget>[
                             Padding(
@@ -1215,7 +1189,9 @@ class _ChatUIState extends State<ChatUI> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        _chatBloc.messDanhMuc(userName: userName,tenDanhMuc: listDanhMuc[index]['tenLoaiDanhMuc']);
+                        _chatBloc.messDanhMuc(
+                            userName: userName,
+                            tenDanhMuc: listDanhMuc[index]['tenLoaiDanhMuc']);
                         maLoaiDM = listDanhMuc[index]['maLoaiDanhMuc'];
                         tenDM = listDanhMuc[index]['tenLoaiDanhMuc'];
                         _checkTTQH = false;
@@ -1272,7 +1248,8 @@ class _ChatUIState extends State<ChatUI> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      _chatBloc.getDSTTHC(userName,listTTHC[index]['linhVucID'],
+                      _chatBloc.getDSTTHC(
+                          userName, listTTHC[index]['linhVucID'],
                           tinNhan: listTTHC[index]['tenLinhVuc']);
                       _checkTTQH = false;
                       _scrollEndScreen();
@@ -1308,17 +1285,19 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _data(String customs, bool readMore, ) {
+  Widget _data(
+    String customs,
+    bool readMore,
+  ) {
     var custom = jsonDecode(customs);
-    print(custom);
     switch (custom['type']) {
       case 'action_tra_cuu_dia_diem':
         var data = jsonDecode(custom['data1']);
         return Column(
           children: [
             Padding(
-              padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
+              padding: const EdgeInsets.only(
+                  left: 8.0, right: 8.0, bottom: 8.0, top: 5),
               child: Container(
                 constraints: const BoxConstraints(
                   maxHeight: double.infinity,
@@ -1333,7 +1312,8 @@ class _ChatUIState extends State<ChatUI> {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.location_on),
+                          const Icon(Icons.add_business),
+                          const SizedBox(width: 10,),
                           Expanded(
                             child: Text(
                               '${data['tenCoQuan'] ?? ' '} ',
@@ -1359,8 +1339,7 @@ class _ChatUIState extends State<ChatUI> {
                                 fontSize: 15.0),
                           ),
                           GestureDetector(
-                            onTap: () =>
-                                launch('tel://${data['soDienThoai']}'),
+                            onTap: () => launch('tel://${data['soDienThoai']}'),
                             child: Text(
                               ' ${data['soDienThoai'] ?? 'Số điện thoại hiện tại chưa được cập nhập'}',
                               style: const TextStyle(
@@ -1390,7 +1369,8 @@ class _ChatUIState extends State<ChatUI> {
                             child: GestureDetector(
                               onTap: () => _launchURL(data['website']),
                               child: Text(
-                                data['website'] ?? ' Website hiện tại chưa được cập nhập',
+                                data['website'] ??
+                                    ' Website hiện tại chưa được cập nhập',
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontStyle: FontStyle.normal,
@@ -1455,35 +1435,34 @@ class _ChatUIState extends State<ChatUI> {
                           ],
                         ),
                       ),
-
                   ],
                 ),
               ),
             ),
-            if(readMore) GestureDetector(
-              onTap: (){
-                _checkTTQH = false;
-                _checkTTHS = false;
-                _chatBloc.dsPhuongXa.sink.add([]);
-                _chatBloc.sendController.sink.add(false);
-                _chatBloc.checkHuy.sink.add(false);
-                _chatBloc.readMoreDD(userName,custom,_mess.text, 1, lat, long);
-              },
-              child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8, bottom: 20),
-                    child: Text(
-                      "Xem tất cả",
-                      style: const TextStyle(
-                          color:  const Color(0xff47b0f0),
-                          fontStyle:  FontStyle.italic,
-                          fontSize: 17.0
+            if (readMore)
+              GestureDetector(
+                onTap: () {
+                  _checkTTQH = false;
+                  _checkTTHS = false;
+                  _chatBloc.dsPhuongXa.sink.add([]);
+                  _chatBloc.sendController.sink.add(false);
+                  _chatBloc.checkHuy.sink.add(false);
+                  _chatBloc.readMoreDD(
+                      userName, custom, _mess.text, 1, lat, long);
+                },
+                child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8, bottom: 20),
+                      child: Text(
+                        "Xem tất cả",
+                        style: const TextStyle(
+                            color: const Color(0xff47b0f0),
+                            fontStyle: FontStyle.italic,
+                            fontSize: 17.0),
                       ),
-                    ),
-                  )),
-            )
-
+                    )),
+              )
           ],
         );
       case 'action_tra_cuu_so_bien_nhan':
@@ -1502,7 +1481,7 @@ class _ChatUIState extends State<ChatUI> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text('Thông tin hồ sơ',
                       style: TextStyle(
                           fontStyle: FontStyle.normal,
@@ -1667,9 +1646,7 @@ class _ChatUIState extends State<ChatUI> {
                   Get.to(
                       BlocProvider(
                           child: ChiTietThuTucUI(), bloc: ChiTietThuTucBloc()),
-                      arguments: {
-                        'result': data[index]['thuTucID']
-                      });
+                      arguments: {'result': data[index]['thuTucID']});
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -1718,7 +1695,7 @@ class _ChatUIState extends State<ChatUI> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration:
-            BoxDecoration(border: Border.all(color: Colors.black12)),
+                BoxDecoration(border: Border.all(color: Colors.black12)),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
@@ -1729,55 +1706,59 @@ class _ChatUIState extends State<ChatUI> {
                     color: Colors.grey.shade300,
                     child: const Center(
                         child: Text(
-                          'Thông tin thửa đất',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )),
+                      'Thông tin thửa đất',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
                   ),
                   Text.rich(TextSpan(children: [
                     const TextSpan(
                       text: 'Địa chỉ: ',
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
                       text: dataTraCuuTTQH['tenXa'] ?? '',
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 15),
+                      style: const TextStyle(
+                          color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
                   Text.rich(TextSpan(children: [
                     const TextSpan(
                       text: 'Số hiệu tờ bản đồ: ',
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
                       text: dataTraCuuTTQH['soHieuToBanDo'],
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 15),
+                      style: const TextStyle(
+                          color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
                   Text.rich(TextSpan(children: [
                     const TextSpan(
                       text: 'Số thứ tự thửa: ',
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
                       text: dataTraCuuTTQH['soThuTuThua'],
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 15),
+                      style: const TextStyle(
+                          color: Colors.redAccent, fontSize: 15),
                     )
                   ])),
                   Text.rich(TextSpan(children: [
                     const TextSpan(
                       text: 'Diện tích: ',
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     TextSpan(
-                      text:  dataTraCuuTTQH['dienTich'].toString(),
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 15),
+                      text: dataTraCuuTTQH['dienTich'].toString(),
+                      style: const TextStyle(
+                          color: Colors.redAccent, fontSize: 15),
                     ),
                     const TextSpan(
                       text: ' m²',
@@ -1794,15 +1775,14 @@ class _ChatUIState extends State<ChatUI> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         TextSpan(
-                          text: dataTraCuuTTQH['tenLoaiDat'] ??
-                              'Đang cập nhật',
-                          style:
-                          const TextStyle(color: Colors.redAccent, fontSize: 15),
+                          text: dataTraCuuTTQH['tenLoaiDat'] ?? 'Đang cập nhật',
+                          style: const TextStyle(
+                              color: Colors.redAccent, fontSize: 15),
                         ),
                       ])),
                       InkWell(
-                        onTap: () => Get.to(WebViewWidget(
-                            dataTraCuuTTQH['gisUrl'])),
+                        onTap: () =>
+                            Get.to(WebViewWidget(dataTraCuuTTQH['gisUrl'])),
                         child: const Text(
                           'Xem chi tiết',
                           style: TextStyle(
@@ -1839,7 +1819,8 @@ class _ChatUIState extends State<ChatUI> {
     _checkPX++;
 
     if (value.trim().isNotEmpty) {
-      _chatBloc.sendThongTinPhuongXa(userName,tinNhan: value, isCheck: _checkPX);
+      _chatBloc.sendThongTinPhuongXa(userName,
+          tinNhan: value, isCheck: _checkPX);
     }
     if (_checkPX == 3) {
       _checkPX = 0;
@@ -1853,7 +1834,8 @@ class _ChatUIState extends State<ChatUI> {
     if (_isCheckTTHS == 0) {
       _checkHS++;
       if (value.trim().isNotEmpty) {
-        _chatBloc.sendThongTinHoSo(userName,tinNhan: value, isCheckTTHS: _checkHS);
+        _chatBloc.sendThongTinHoSo(userName,
+            tinNhan: value, isCheckTTHS: _checkHS);
       }
     }
   }
@@ -1880,8 +1862,8 @@ class _ChatUIState extends State<ChatUI> {
 
   void _sendBot() {
     if (_mess.text.trim().isNotEmpty) {
-      _chatBloc
-          .sendMessBot(userName,_mess.text, danhMucChucNang: _danhMucChucNangModels,lat: lat, long: long);
+      _chatBloc.sendMessBot(userName, _mess.text,
+          danhMucChucNang: _danhMucChucNangModels, lat: lat, long: long);
 
       _chatBloc.sendController.sink.add(false);
       _mess.clear();
