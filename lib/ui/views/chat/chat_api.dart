@@ -122,7 +122,7 @@ Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
 }
 
 @protected
-Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
+Future<TraCuuBienNhanModel?> _getTraCuuSoBienNhanAPI(
 
     String soBienNhan) async {
   final String _url =
@@ -133,14 +133,35 @@ Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
     return null;
   }
   final data = jsonDecode(json);
-  List<TraCuuBienNhanModel> _listData = <TraCuuBienNhanModel>[];
 
   if (data['result'] != null) {
-    final result = data['result'] as List;
-    _listData =
-        result.map((tagJson) => TraCuuBienNhanModel.fromJson(tagJson)).toList();
+    final TraCuuBienNhanModel _result =
+    TraCuuBienNhanModel.fromJson(data['result']);
 
-    return _listData;
+
+    return _result;
+  }
+
+  return null;
+}
+
+@protected
+Future<HoSo1Cua?> _getTraCuuSoHoSo1CuaAPI( String soBienNhan) async {
+  final String _url =
+      LocalVariable.urlAPI + '/api/Home/TraCuuHoSoDatDai/$soBienNhan';
+
+  final String? json = await HttpRequest.instance.getAsync(_url);
+  if (json == null) {
+    return null;
+  }
+  final data = jsonDecode(json);
+
+  if (data['result'] != null) {
+    final HoSo1Cua _result =
+    HoSo1Cua.fromJson(data['result']);
+
+
+    return _result;
   }
 
   return null;

@@ -115,38 +115,38 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                   }
                 }),
           ),
-          Positioned(
-              bottom: 0,
-              child: Container(
-                height: Get.height * 0.08,
-                width: Get.width,
-                color: Colors.grey.withOpacity(0.2),
-                child: Center(child: Container(
-                    width: Get.width * 0.3,
-                    height: Get.height * 0.05,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    child:  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const[
-
-                         Padding(
-                          padding:  EdgeInsets.only(right: 5),
-                          child: Icon(
-                            Icons.insert_drive_file_outlined,
-                            color: Colors.black,
-                          ),
-                        ),
-                         Text(
-                          'Nộp hồ sơ',
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ))
-                ),
-              ))
+          // Positioned(
+          //     bottom: 0,
+          //     child: Container(
+          //       height: Get.height * 0.08,
+          //       width: Get.width,
+          //       color: Colors.grey.withOpacity(0.2),
+          //       child: Center(child: Container(
+          //           width: Get.width * 0.3,
+          //           height: Get.height * 0.05,
+          //           decoration: const BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.all(Radius.circular(12)),
+          //           ),
+          //           child:  Row(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: const[
+          //
+          //                Padding(
+          //                 padding:  EdgeInsets.only(right: 5),
+          //                 child: Icon(
+          //                   Icons.insert_drive_file_outlined,
+          //                   color: Colors.black,
+          //                 ),
+          //               ),
+          //                Text(
+          //                 'Nộp hồ sơ',
+          //                 style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          //               ),
+          //             ],
+          //           ))
+          //       ),
+          //     ))
         ],
       ),
     );
