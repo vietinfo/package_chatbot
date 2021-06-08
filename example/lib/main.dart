@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: GestureDetector(
           onTap: () {
             ExtensionFunction.instance.goChatBot(
-                userName: '', userId: 0, fullName: '', soDienThoai: '');
+                userName: '......1', userId: 0, fullName: 'Ng Nhan', soDienThoai: '');
           },
           child: Stack(
             children: [

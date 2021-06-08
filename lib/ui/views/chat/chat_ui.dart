@@ -11,13 +11,11 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
+import 'package:package_chatbot/core/config/local_variable.dart';
 import 'package:package_chatbot/core/config/palettes.dart';
-import 'package:package_chatbot/core/model/botmessasge.dart';
 import 'package:package_chatbot/core/model/chatmodels.dart';
 import 'package:package_chatbot/core/model/ds_chu_nang_model.dart';
 import 'package:package_chatbot/core/model/phuongxamodel.dart';
-import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
-import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
 import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
 import 'package:package_chatbot/ui/views/chat/chat_bloc.dart';
 import 'package:package_chatbot/ui/views/chitietthutuc/chitietthutuc_bloc.dart';
@@ -52,7 +50,7 @@ class _ChatUIState extends State<ChatUI> {
   bool _checkTTHS = false;
   bool _checkTTQH = false;
   bool _checkTTQH1 = false;
-  final int _pageNum = 1;
+   int _pageNum = 1;
   bool _checkKB = false;
   int _checkPX = 0;
   int _checkHS = 0;
@@ -68,6 +66,7 @@ class _ChatUIState extends State<ChatUI> {
   final FocusNode focusNode = FocusNode();
 
   late ScrollController listScrollController;
+  int pageNumListMess = 2;
 
   Future<void> _getLocation() async {
     setState(() {
@@ -101,9 +100,9 @@ class _ChatUIState extends State<ChatUI> {
     listScrollController = ScrollController();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     timeLine = DateTime.now();
-    userName = 'ahihidongoc';
+    userName = LocalVariable.userName;
     _getLocation();
-    _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName);
+    _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName, pageNum: _pageNum);
   }
 
   @override
@@ -637,7 +636,7 @@ class _ChatUIState extends State<ChatUI> {
                                                         }
                                                         if (_checkTTHS) {
                                                           if(checkHoSo == 'HoSoDatDai'){
-                                                            _sendThongTinHoSo(
+                                                            _sendThongTinHoSoDatDai(
                                                                 _mess.text);
                                                           }else{
                                                             _sendThongTinHoSo1Cua(
@@ -797,126 +796,134 @@ class _ChatUIState extends State<ChatUI> {
                   if (scrollNotification is ScrollUpdateNotification) {
                     if (scrollNotification.metrics.pixels != 0) {
                       _chatBloc.showBottomScroll(true);
-                      if(listScrollController.offset >=
-                          listScrollController.position.maxScrollExtent &&
-                          !listScrollController.position.outOfRange){
-                        print('-------1------');
-                      }
                     } else {
                       _chatBloc.showBottomScroll(false);
+                    }
+
+                  }
+                  if (scrollNotification is ScrollEndNotification) {
+                    final before = scrollNotification.metrics.extentBefore;
+                    final max = scrollNotification.metrics.maxScrollExtent;
+
+                    if (before == max) {
+                      _chatBloc.loadMore(userName: userName,pageNum: pageNumListMess++);
                     }
                   }
                   return true;
                 },
-                child: SingleChildScrollView(
+                child: CupertinoScrollbar(
                   controller: listScrollController,
-                  padding: EdgeInsets.zero,
-                  reverse: true,
-                  child: StreamBuilder(
-                      stream: _chatBloc.mess.stream,
-                      builder:
-                          (context, AsyncSnapshot<List<ChatModel>> snapshot) {
-                        if (snapshot.hasData) {
-                          _chatModel = snapshot.data;
+                  isAlwaysShown: true,
+                  child: SingleChildScrollView(
+                    controller: listScrollController,
+                    padding: EdgeInsets.zero,
+                    reverse: true,
+                    child: StreamBuilder(
+                        stream: _chatBloc.mess.stream,
+                        builder:
+                            (context, AsyncSnapshot<List<ChatModel>> snapshot) {
+                          if (snapshot.hasData) {
+                            _chatModel = snapshot.data;
 
-                          // kiem tra thong tin quy hoach tu bot tra ra
-                          if (_chatModel!.first.isTTQH!) {
-                            _checkTTQH = _chatModel!.first.isTTQH!;
-                          }
+                            // kiem tra thong tin quy hoach tu bot tra ra
+                            if (_chatModel!.first.isTTQH!) {
+                              _checkTTQH = _chatModel!.first.isTTQH!;
+                            }
 
-                          if (_chatModel!.first.isTTQHEnd!) {
-                            _checkTTQH = false;
-                            _checkTTQH1 = _chatModel!.first.isTTQHEnd!;
-                          } else {
-                            _checkTTQH1 = false;
-                          }
-                          //--------------------------------------//
+                            if (_chatModel!.first.isTTQHEnd!) {
+                              _checkTTQH = false;
+                              _checkTTQH1 = _chatModel!.first.isTTQHEnd!;
+                            } else {
+                              _checkTTQH1 = false;
+                            }
+                            //--------------------------------------//
 
-                          // kiem tra sô bien nhan tu bot tra ra
-                          if (_chatModel!.first.isTTHS!) {
-                            _checkTTHS = _chatModel!.first.isTTHS!;
-                          }
-                          //  = 1 dang nhap sai ma bien nhan
-                          if (_chatModel!.first.isTTHSEnd == 1) {
-                            _checkHS = 0;
-                          }
-                          //  = 2 dang nhap dung ma bien nhan
-                          if (_chatModel!.first.isTTHSEnd == 2) {
-                            _isCheckTTHS = 0;
-                            _checkTTHS = false;
-                            _checkHS = 0;
-                          }
-                          //--------------------------------------//
-                          return Column(
-                            children: _chatModel!.reversed.map((e) {
-                              tenDM = e.messRight;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if(e.line == true)  _lineNew(),
-                                  if (e.isInfo == true) _info(),
-                                  if (e.messRight != null)
-                                    Padding(
+                            // kiem tra sô bien nhan tu bot tra ra
+                            if (_chatModel!.first.isTTHS!) {
+                              _checkTTHS = _chatModel!.first.isTTHS!;
+                            }
+                            //  = 1 dang nhap sai ma bien nhan
+                            if (_chatModel!.first.isTTHSEnd == 1) {
+                              _checkHS = 0;
+                            }
+                            //  = 2 dang nhap dung ma bien nhan
+                            if (_chatModel!.first.isTTHSEnd == 2) {
+                              _isCheckTTHS = 0;
+                              _checkTTHS = false;
+                              _checkHS = 0;
+                            }
+                            //--------------------------------------//
+                            return Column(
+                              children: _chatModel!.reversed.map((e) {
+                                tenDM = e.messRight;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if(e.line == true)  _lineNew(),
+                                    if (e.isInfo == true) _info(),
+                                    if (e.messRight != null)
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {},
+                                            child: MessageTile(
+                                              message: e.messRight!,
+                                              sendByMe: true,
+                                            ),
+                                          )),
+                                    if (e.messLeft != null)
+                                      Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: GestureDetector(
                                           onTap: () {},
                                           child: MessageTile(
-                                            message: e.messRight!,
-                                            sendByMe: true,
+                                            message: e.messLeft!,
+                                            sendByMe: false,
                                           ),
-                                        )),
-                                  if (e.messLeft != null)
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: MessageTile(
-                                          message: e.messLeft!,
-                                          sendByMe: false,
                                         ),
                                       ),
-                                    ),
-                                  if (e.isListDM == true)
-                                    _buildColumnDM(e.listDanhMuc!),
-                                  if (e.isTTHC == true)
-                                    _buildColumnTTHC(e.listTTHC!),
-                                  if (e.isHeader == true)
-                                    Column(
-                                      children: [
-                                        StreamBuilder(
-                                            stream: _chatBloc.dsChucNang.stream,
-                                            builder: (context,
-                                                AsyncSnapshot<
-                                                        List<
-                                                            DanhMucChucNangModels>>
-                                                    snapshot) {
-                                              _danhMucChucNangModels =
-                                                  snapshot.data;
-                                              if (snapshot.hasData) {
-                                                return _buildColumnDSChuNang();
-                                              } else {
-                                                return const SizedBox.shrink();
-                                              }
-                                            })
-                                      ],
-                                    ),
-                                  if (e.traCuu != null)
-                                    _data(e.traCuu!, e.isReadMore!)
-                                ],
-                              );
-                            }).toList(),
-                          );
-                        } else {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.transparent,
+                                    if (e.isListDM == true)
+                                      _buildColumnDM(e.listDanhMuc!),
+                                    if (e.isTTHC == true)
+                                      _buildColumnTTHC(e.listTTHC!),
+                                    if (e.isHeader == true)
+                                      Column(
+                                        children: [
+                                          StreamBuilder(
+                                              stream: _chatBloc.dsChucNang.stream,
+                                              builder: (context,
+                                                  AsyncSnapshot<
+                                                          List<
+                                                              DanhMucChucNangModels>>
+                                                      snapshot) {
+                                                _danhMucChucNangModels =
+                                                    snapshot.data;
+                                                if (snapshot.hasData) {
+                                                  return _buildColumnDSChuNang();
+                                                } else {
+                                                  return const SizedBox.shrink();
+                                                }
+                                              })
+                                        ],
+                                      ),
+                                    if (e.traCuu != null)
+                                      _data(e.traCuu!, e.isReadMore!)
+                                  ],
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.transparent,
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      }),
+                            );
+                          }
+                        }),
+                  ),
                 ),
               ),
             ),
@@ -1105,13 +1112,14 @@ class _ChatUIState extends State<ChatUI> {
         const SizedBox(
           height: 10,
         ),
-        const Padding(
+         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Chào mừng bạn đến với UBND huyện Hóc Môn! Tôi là BOT tự động, Mời Anh/Chị bấm bắt đầu để chọn dịch vụ cần hổ trợ hoặc muốn tra cứu thông tin :).',
+            'Chào mừng ${LocalVariable.fullName} đến với UBND huyện Hóc Môn! Tôi là BOT tự động. Mời Anh/Chị chọn dịch vụ cần hổ trợ hoặc muốn tra cứu thông tin :).',
             textAlign: TextAlign.center,
           ),
         ),
+
       ],
     );
   }
@@ -1249,7 +1257,7 @@ class _ChatUIState extends State<ChatUI> {
                           //_chatBloc.checkHuy.sink.add(true);
                           _checkTTHS = true;
                           checkHoSo = listDanhMuc[index].maLoaiDanhMuc;
-                          _chatBloc.sendThongTinHoSo(userName, isCheckTTHS: 0,tinNhan: listDanhMuc[index].tenLoaiDanhMuc);
+                          _chatBloc.sendThongTinHoSoDatDai(userName, isCheckTTHS: 0,tinNhan: listDanhMuc[index].tenLoaiDanhMuc);
 
 
                         }else if(listDanhMuc[index].maLoaiDanhMuc == 'HoSo1Cua'){
@@ -2175,13 +2183,13 @@ class _ChatUIState extends State<ChatUI> {
     }
   }
 
-  void _sendThongTinHoSo(String value) {
+  void _sendThongTinHoSoDatDai(String value) {
     _mess.clear();
 
     if (_isCheckTTHS == 0) {
       _checkHS++;
       if (value.trim().isNotEmpty) {
-        _chatBloc.sendThongTinHoSo(userName,
+        _chatBloc.sendThongTinHoSoDatDai(userName,
             tinNhan: value, isCheckTTHS: _checkHS);
       }
     }
