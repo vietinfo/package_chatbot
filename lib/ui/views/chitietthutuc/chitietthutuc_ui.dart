@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
-import 'package:package_chatbot/core/model/chitietthutucmodel.dart';
+import 'package:package_chatbot/core/model/chi_tiet_thu_tuc_model.dart';
 import 'package:package_chatbot/ui/views/chitietthutuc/chitietthutuc_bloc.dart';
 import 'package:package_chatbot/ui/widgets/disable_glow_listview.dart';
 

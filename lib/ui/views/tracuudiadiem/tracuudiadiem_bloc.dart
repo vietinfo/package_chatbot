@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/config/local_variable.dart';
-import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
+import 'package:package_chatbot/core/model/tra_cuu_dia_diem_model.dart';
 import 'package:package_chatbot/core/services/http_request.dart';
 import 'package:rxdart/rxdart.dart';
 part 'tracuudiadiem_api.dart';

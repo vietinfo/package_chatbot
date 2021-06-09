@@ -122,7 +122,7 @@ Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
 }
 
 @protected
-Future<TraCuuBienNhanModel?> _traCuuHoSo1CuaAPI(
+Future<HoSo1CuaModel?> _traCuuHoSo1CuaAPI(
 
     String soBienNhan) async {
   final String _url =
@@ -135,8 +135,8 @@ Future<TraCuuBienNhanModel?> _traCuuHoSo1CuaAPI(
   final data = jsonDecode(json);
 
   if (data['result'] != null) {
-    final TraCuuBienNhanModel _result =
-    TraCuuBienNhanModel.fromJson(data['result']);
+    final HoSo1CuaModel _result =
+    HoSo1CuaModel.fromJson(data['result']);
 
 
     return _result;
@@ -146,7 +146,7 @@ Future<TraCuuBienNhanModel?> _traCuuHoSo1CuaAPI(
 }
 
 @protected
-Future<HoSo1Cua?> _traCuuHoSoDatDaiAPI( String maHoSo) async {
+Future<HoSoDatDaiModel?> _traCuuHoSoDatDaiAPI( String maHoSo) async {
   final String _url =
       LocalVariable.urlAPI + '/api/Home/TraCuuHoSoDatDai/$maHoSo';
 
@@ -157,8 +157,8 @@ Future<HoSo1Cua?> _traCuuHoSoDatDaiAPI( String maHoSo) async {
   final data = jsonDecode(json);
 
   if (data['result'] != null) {
-    final HoSo1Cua _result =
-    HoSo1Cua.fromJson(data['result']);
+    final HoSoDatDaiModel _result =
+    HoSoDatDaiModel.fromJson(data['result']);
 
 
     return _result;

@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/config/local_variable.dart';
-import 'package:package_chatbot/core/model/botmessasge.dart';
-import 'package:package_chatbot/core/model/chatmodels.dart';
+import 'package:package_chatbot/core/model/bot_messasge.dart';
+import 'package:package_chatbot/core/model/chat_models.dart';
 import 'package:package_chatbot/core/model/ds_chu_nang_model.dart';
-import 'package:package_chatbot/core/model/ho_so_1_cua.dart';
-import 'package:package_chatbot/core/model/phuongxamodel.dart';
-import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
-import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
-import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
+import 'package:package_chatbot/core/model/ho_so_dat_dai_model.dart';
+import 'package:package_chatbot/core/model/phuong_xa_model.dart';
+import 'package:package_chatbot/core/model/ho_so_1_cua_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_dia_diem_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_tthc_model.dart';
 import 'package:package_chatbot/core/services/http_request.dart';
 import 'package:package_chatbot/core/utils/utilities.dart';
 import 'package:package_chatbot/ui/views/tracuudiadiem/tracuudiadiem_bloc.dart';
@@ -222,7 +222,7 @@ class ChatBloc extends BaseBloc {
     _listMess.insert(0, ChatModel(messRight: tinNhan));
     mess.sink.add(_listMess);
     typing.sink.add(true);
-
+    //
     var params = {
       'param': [
         ChatModel(userName: userName, messRight: tinNhan).toJson(),
@@ -238,7 +238,7 @@ class ChatBloc extends BaseBloc {
         } else {
           _isCheckTTQH = false;
         }
-        if (value.first.text == 'TCTTHS') {
+        if (value.first.text == 'TCTTHS' || value.first.text == 'HoSo1Cua' || value.first.text == 'HoSoDatDai') {
           _isCheckTTHS = true;
         } else {
           _isCheckTTHS = false;
@@ -270,9 +270,13 @@ class ChatBloc extends BaseBloc {
             case 'action_tra_cuu_dia_diem':
               keyTraCuuDiaDiem(userName, value, tinNhan: tinNhan);
               break;
-            case 'action_tra_cuu_so_bien_nhan':
-              keyTraCuuBienNhan(userName, value);
+            case 'action_tra_cuu_ho_so_1_cua':
+              keyTraCuuHoSo1Cua(userName, value);
               break;
+            case 'action_tra_cuu_ho_so_dat_dai':
+              keyTraCuuHoSoDatDai(userName, value);
+              break;
+
             case 'action_tra_cuu_thu_tuc_hanh_chinh':
               keyTraCuuTTHC(userName, value, tinNhan);
               break;
@@ -641,26 +645,45 @@ class ChatBloc extends BaseBloc {
     }
   }
 
-  void keyTraCuuBienNhan(String userName, List<BotMessage> value) {
-    if (value.first.custom!.data!.traCuuBienNhan != null) {
-      if (value.first.custom!.data!.traCuuBienNhan!.isNotEmpty) {
-        TraCuu data = TraCuu(
-            traCuuBienNhan: value.first.custom!.data!.traCuuBienNhan!.first,
-            type: 'action_tra_cuu_so_bien_nhan');
+  void keyTraCuuHoSo1Cua(String userName, List<BotMessage> value) {
+    if (value.first.custom!.data!.hoSo1Cua != null) {
+      TraCuu data = TraCuu(
+          traCuuHS1Cua: value.first.custom!.data!.hoSo1Cua!,
+          type: 'action_tra_cuu_ho_so_1_cua');
 
-        _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
-        mess.sink.add(_listMess);
+      _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
+      mess.sink.add(_listMess);
 
-        var params = {
-          'param': [
-            ChatModel(userName: userName, traCuu: jsonEncode(data.toJson()))
-                .toJson(),
-          ]
-        };
-        _insertHistoryChat(params);
-      } else {
-        troGiup(userName);
-      }
+      var params = {
+        'param': [
+          ChatModel(userName: userName, traCuu: jsonEncode(data.toJson()))
+              .toJson(),
+        ]
+      };
+      _insertHistoryChat(params);
+    }else{
+      troGiup(userName);
+    }
+  }
+
+  void keyTraCuuHoSoDatDai(String userName, List<BotMessage> value) {
+    if (value.first.custom!.data!.hoSoDatDai != null) {
+      TraCuu data = TraCuu(
+          traCuuHSDatDai: value.first.custom!.data!.hoSoDatDai!,
+          type: 'action_tra_cuu_ho_so_dat_dai');
+
+      _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
+      mess.sink.add(_listMess);
+
+      var params = {
+        'param': [
+          ChatModel(userName: userName, traCuu: jsonEncode(data.toJson()))
+              .toJson(),
+        ]
+      };
+      _insertHistoryChat(params);
+    }else{
+      troGiup(userName);
     }
   }
 
@@ -914,11 +937,12 @@ class ChatBloc extends BaseBloc {
 
       /// Phải xem lại
       case 'HoSo1Cua':
-        sendThongTinHoSoDatDai(userName, tinNhan: tinNhan, isCheckTTHS: 0);
+        sendThongTinHoSo1Cua(userName, tinNhan: tinNhan, isCheckTTHS: 0);
+
 
         break;
       case 'HoSoDatDai':
-        sendThongTinHoSo1Cua(userName, tinNhan: tinNhan, isCheckTTHS: 0);
+        sendThongTinHoSoDatDai(userName, tinNhan: tinNhan, isCheckTTHS: 0);
         break;
 
       ///------------------------------------///
@@ -1148,15 +1172,16 @@ class ChatBloc extends BaseBloc {
   }
 
   void sendThongTinHoSo1Cua(String userName,
-      {String? tinNhan, int? isCheckTTHS}) {
+      {String? tinNhan, int? isCheckTTHS, bool checkClick = false}) {
     checkHuy.sink.add(true);
     if (isCheckTTHS == 0) {
       //checkHuy.sink.add(true);
-      _listMess.insert(0, ChatModel(messRight: tinNhan));
+     if(checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
       _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
+            checkTTHS: 'HoSo1Cua',
             isTTHS: (_isCheckTTHS) ? true : false,
             messLeft:
                 'Để tra cứu tình trạng hồ sơ vui lòng nhập số biên nhận được ghi trên hồ sơ (vd: 123456ABCD)',
@@ -1167,7 +1192,7 @@ class ChatBloc extends BaseBloc {
 
       var params = {
         'param': [
-          ChatModel(userName: userName, messRight: tinNhan).toJson(),
+          if(checkClick) ChatModel(userName: userName, messRight: tinNhan).toJson(),
           ChatModel(userName: userName, messLeft: 'Hướng dẫn tra cứu').toJson(),
           ChatModel(
             userName: userName,
@@ -1201,7 +1226,7 @@ class ChatBloc extends BaseBloc {
       _traCuuHoSo1CuaAPI(tinNhan!).then((value) {
         if (value != null) {
           TraCuu data = TraCuu(
-              traCuuBienNhan: value, type: 'action_tra_cuu_so_bien_nhan');
+              traCuuHS1Cua: value, type: 'action_tra_cuu_ho_so_1_cua');
 
           _listMess.insert(
               0,
@@ -1255,14 +1280,15 @@ class ChatBloc extends BaseBloc {
   }
 
   void sendThongTinHoSoDatDai(String userName,
-      {String? tinNhan, int? isCheckTTHS}) {
+      {String? tinNhan, int? isCheckTTHS,bool checkClick = false}) {
     checkHuy.sink.add(true);
     if (isCheckTTHS == 0) {
-      _listMess.insert(0, ChatModel(messRight: tinNhan));
+      if(checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
       _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
           ChatModel(
+            checkTTHS: 'HoSoDatDai',
             isTTHS: (_isCheckTTHS) ? true : false,
             messLeft:
                 'Để tra cứu tình trạng hồ sơ vui lòng nhập số biên nhận được ghi trên hồ sơ (vd: 123456ABCD)',
@@ -1272,7 +1298,7 @@ class ChatBloc extends BaseBloc {
 
       var params = {
         'param': [
-          ChatModel(userName: userName, messRight: tinNhan).toJson(),
+          if(checkClick) ChatModel(userName: userName, messRight: tinNhan).toJson(),
           ChatModel(userName: userName, messLeft: 'Hướng dẫn tra cứu').toJson(),
           ChatModel(
             userName: userName,
@@ -1306,7 +1332,7 @@ class ChatBloc extends BaseBloc {
       _traCuuHoSoDatDaiAPI(tinNhan!).then((value) {
         if (value != null) {
           TraCuu data = TraCuu(
-              traCuuHoSo1Cua: value, type: 'action_tra_cuu_so_ho_so_1_cua');
+              traCuuHSDatDai: value, type: 'action_tra_cuu_ho_so_dat_dai');
 
           _listMess.insert(
               0,
@@ -1462,6 +1488,7 @@ class ChatBloc extends BaseBloc {
           _listMess.addAll(value);
           mess.sink.add(_listMess);
         }
+
       });
     }
   }

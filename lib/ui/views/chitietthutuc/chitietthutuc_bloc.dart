@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/config/local_variable.dart';
-import 'package:package_chatbot/core/model/chitietthutucmodel.dart';
+import 'package:package_chatbot/core/model/chi_tiet_thu_tuc_model.dart';
 import 'package:package_chatbot/core/services/http_request.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;

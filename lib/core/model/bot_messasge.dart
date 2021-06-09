@@ -1,6 +1,7 @@
-import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
-import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
-import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
+import 'package:package_chatbot/core/model/ho_so_1_cua_model.dart';
+import 'package:package_chatbot/core/model/ho_so_dat_dai_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_dia_diem_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_tthc_model.dart';
 
 class BotMessage {
   String? recipientId;
@@ -56,17 +57,20 @@ class Data {
   int? banKinh;
   String? maLoaiDanhMuc;
   List<TraCuuDiaDiemModels>? traCuuDiaDiem;
-  List<TraCuuBienNhanModel>? traCuuBienNhan;
+  HoSo1CuaModel? hoSo1Cua;
+  HoSoDatDaiModel? hoSoDatDai;
   List<TraCuuTTHCmodel>? traCuuTTHC;
 
   Data({ this.traCuuDiaDiem,this.maCoQuan,
-    this.traCuuBienNhan,
+    this.hoSo1Cua,
     this.traCuuTTHC,
     this.tenCoQuan,
     this.lat,
     this.long,
     this.banKinh,
-    this.maLoaiDanhMuc});
+    this.maLoaiDanhMuc,
+    this.hoSoDatDai
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     maCoQuan = json['maCoQuan'];
@@ -75,22 +79,31 @@ class Data {
     long = json['long'];
     banKinh = json['banKinh'];
     maLoaiDanhMuc = json['maLoaiDanhMuc'];
+
     //------------------------//
-    if (json['result'] != null) {
+    if (json['result'] is List) {
+
       traCuuDiaDiem = <TraCuuDiaDiemModels>[];
       json['result'].forEach((v) {
         traCuuDiaDiem!.add(TraCuuDiaDiemModels.fromJson(v));
       });
 
-      traCuuBienNhan = <TraCuuBienNhanModel>[];
-      json['result'].forEach((v) {
-        traCuuBienNhan!.add(TraCuuBienNhanModel.fromJson(v));
-      });
+
 
       traCuuTTHC = <TraCuuTTHCmodel>[];
       json['result'].forEach((v) {
         traCuuTTHC!.add(TraCuuTTHCmodel.fromJson(v));
       });
+
+    }else{
+
+      hoSo1Cua = json['result'] != null
+          ? HoSo1CuaModel.fromJson(json['result'])
+          : null;
+
+      hoSoDatDai = json['result'] != null
+          ? HoSoDatDaiModel.fromJson(json['result'])
+          : null;
 
     }
   }
@@ -106,9 +119,15 @@ class Data {
     if (traCuuDiaDiem != null) {
       data['result'] = traCuuDiaDiem!.map((v) => v.toJson()).toList();
     }
-    if(traCuuBienNhan != null){
-      data['result'] = traCuuBienNhan!.map((v) => v.toJson()).toList();
+
+    if(hoSo1Cua != null){
+      data['result'] = hoSo1Cua!.toJson();
     }
+
+    if(hoSoDatDai != null){
+      data['result'] = hoSoDatDai!.toJson();
+    }
+
     if(traCuuTTHC != null){
       data['result'] = traCuuTTHC!.map((v) => v.toJson()).toList();
     }

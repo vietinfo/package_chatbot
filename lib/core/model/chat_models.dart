@@ -1,9 +1,9 @@
-import 'package:package_chatbot/core/model/ho_so_1_cua.dart';
-import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
-import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
-import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
+import 'package:package_chatbot/core/model/ho_so_dat_dai_model.dart';
+import 'package:package_chatbot/core/model/ho_so_1_cua_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_dia_diem_model.dart';
+import 'package:package_chatbot/core/model/tra_cuu_tthc_model.dart';
 
-import 'botmessasge.dart';
+import 'bot_messasge.dart';
 import 'ds_chu_nang_model.dart';
 
 class ChatModel {
@@ -31,6 +31,7 @@ class ChatModel {
   DateTime? createDate;
 
   bool? line = false;
+  String? checkTTHS;
 
   ChatModel({
     this.id,
@@ -51,7 +52,8 @@ class ChatModel {
     this.traCuu,
     this.listTTHC,
     this.createDate,
-    this.line = false
+    this.line = false,
+    this.checkTTHS,
   });
 
   ChatModel.fromJson(Map<String, dynamic> json) {
@@ -99,8 +101,8 @@ class ChatModel {
 class TraCuu {
   List<TraCuuDiaDiemModels>? data;
   TraCuuDiaDiemModels? data1;
-  TraCuuBienNhanModel? traCuuBienNhan;
-  HoSo1Cua? traCuuHoSo1Cua;
+  HoSo1CuaModel? traCuuHS1Cua;
+  HoSoDatDaiModel? traCuuHSDatDai;
   List<TraCuuTTHCmodel>? traCuuTTHCmodel;
   ChiTietQuyHoachModel? chiTietQuyHoachModel;
   String? type;
@@ -113,14 +115,14 @@ class TraCuu {
       {this.data,
       this.type,
       this.data1,
-      this.traCuuBienNhan,
+      this.traCuuHS1Cua,
       this.traCuuTTHCmodel,
       this.chiTietQuyHoachModel,
       this.dataBot,
       this.banKinh,
       this.tenDM,
       this.maLoaiDanhMuc,
-      this.traCuuHoSo1Cua
+      this.traCuuHSDatDai
       });
 
   TraCuu.fromJson(Map<String, dynamic> json) {
@@ -134,8 +136,8 @@ class TraCuu {
     data1 = json['data1'] != null
         ? TraCuuDiaDiemModels.fromJson(json['data1'])
         : null;
-    traCuuBienNhan = json['traCuuBienNhan'] != null
-        ? TraCuuBienNhanModel.fromJson(json['traCuuBienNhan'])
+    traCuuHS1Cua = json['traCuuBienNhan'] != null
+        ? HoSo1CuaModel.fromJson(json['traCuuBienNhan'])
         : null;
 
     if (json['traCuuTTHCmodel'] != null) {
@@ -160,8 +162,8 @@ class TraCuu {
     banKinh = json['banKinh'];
     maLoaiDanhMuc = json['maLoaiDanhMuc'];
     tenDM = json['tenDM'];
-    traCuuHoSo1Cua = json['traCuuHoSo1Cua'] != null
-        ? HoSo1Cua.fromJson(json['traCuuHoSo1Cua'])
+    traCuuHSDatDai = json['traCuuHoSo1Cua'] != null
+        ? HoSoDatDaiModel.fromJson(json['traCuuHoSo1Cua'])
         : null;
   }
 
@@ -175,8 +177,8 @@ class TraCuu {
       data['data1'] = data1!.toJson();
     }
 
-    if (traCuuBienNhan != null) {
-      data['traCuuBienNhan'] = traCuuBienNhan!.toJson();
+    if (traCuuHS1Cua != null) {
+      data['traCuuBienNhan'] = traCuuHS1Cua!.toJson();
     }
 
     if (traCuuTTHCmodel != null) {
@@ -195,8 +197,8 @@ class TraCuu {
     data['maLoaiDanhMuc'] = this.maLoaiDanhMuc;
     data['tenDM'] = this.tenDM;
 
-    if (traCuuHoSo1Cua != null) {
-      data['traCuuHoSo1Cua'] = traCuuHoSo1Cua!.toJson();
+    if (traCuuHSDatDai != null) {
+      data['traCuuHoSo1Cua'] = traCuuHSDatDai!.toJson();
     }
     return data;
   }

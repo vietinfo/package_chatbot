@@ -1,4 +1,4 @@
-class TraCuuBienNhanModel{
+class HoSo1CuaModel{
   String? diaChiDangKy;
   int? donViNhanID;
   int? dungOrTre;
@@ -28,7 +28,7 @@ class TraCuuBienNhanModel{
   String? tinhTrangHoSo;
   String? trichYeu;
 
-  TraCuuBienNhanModel(
+  HoSo1CuaModel(
       {
 
         //------tra cuu bien nhan
@@ -66,7 +66,7 @@ class TraCuuBienNhanModel{
       });
 
 
-  TraCuuBienNhanModel.fromJson(Map<String, dynamic> json) {
+  HoSo1CuaModel.fromJson(Map<String, dynamic> json) {
 
 
     //------tra cuu bien nhan

@@ -1,4 +1,4 @@
-class HoSo1Cua {
+class HoSoDatDaiModel {
   int? receiveDate;
   String? statusName;
   List<AttachedDocuments>? attachedDocuments;
@@ -17,7 +17,7 @@ class HoSo1Cua {
   String? receiptNumber;
   String? recordTypeName;
 
-  HoSo1Cua(
+  HoSoDatDaiModel(
       {this.receiveDate,
         this.statusName,
         this.attachedDocuments,
@@ -36,7 +36,7 @@ class HoSo1Cua {
         this.receiptNumber,
         this.recordTypeName});
 
-  HoSo1Cua.fromJson(Map<String, dynamic> json) {
+  HoSoDatDaiModel.fromJson(Map<String, dynamic> json) {
     receiveDate = json['receiveDate'];
     statusName = json['statusName'];
     if (json['attachedDocuments'] != null) {
