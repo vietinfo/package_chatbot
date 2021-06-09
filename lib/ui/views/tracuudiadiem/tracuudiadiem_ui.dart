@@ -19,7 +19,7 @@ class TraCuuDiaDiemUI extends StatefulWidget {
 class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
   late TraCuuDiaDiemBloc _traCuuDiaDiemBloc;
   late List<TraCuuDiaDiemModels> _traCuuDiaDiem;
-  late List<dynamic> _botMess;
+  late List<BotMessage> _botMess;
   late String _tenDM;
   late int _banKinh;
   late String _maLoaiDanhMuc;
@@ -54,10 +54,10 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
       _traCuuDiaDiemBloc.traCuuDD1(
           lat: _lat,
           long: _long,
-          banKinh: _botMess.first['custom']['data']['banKinh'],
-          maLoaiDanhMuc: _botMess.first['custom']['data']['maLoaiDanhMuc'],
-          tenCoQuan: _botMess.first['custom']['data']['tenCoQuan'],
-          maCoQuan: _botMess.first['custom']['data']['maCoQuan'],
+          banKinh: _botMess.first.custom!.data!.banKinh,
+          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
+          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
+          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
           pageNum: _pageNum);
     }
   }
@@ -91,7 +91,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                       itemCount: _traCuuDiaDiem.length,
                       itemBuilder: (context, index) {
                         final TraCuuDiaDiemModels traCuuDiaDiem =
-                            _traCuuDiaDiem[index];
+                        _traCuuDiaDiem[index];
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0, top: 5),
@@ -101,7 +101,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                             ),
                             decoration: const BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(14)),
+                                BorderRadius.all(Radius.circular(14)),
                                 boxShadow: [
                                   BoxShadow(
                                       offset: Offset(0, 3),
@@ -134,7 +134,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Điện thoại:',
@@ -165,7 +165,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Website: ',
@@ -196,7 +196,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Địa chỉ: ',
@@ -301,10 +301,10 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
       _traCuuDiaDiemBloc.traCuuDD1(
           lat: _lat,
           long: _long,
-          banKinh:  _botMess.first['custom']['data']['banKinh'],
-          maLoaiDanhMuc:  _botMess.first['custom']['data']['maLoaiDanhMuc'],
-          tenCoQuan:  _botMess.first['custom']['data']['tenCoQuan'],
-          maCoQuan:  _botMess.first['custom']['data']['maCoQuan'],
+          banKinh: _botMess.first.custom!.data!.banKinh,
+          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
+          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
+          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
           pageNum: _pageNum++);
     }
   }

@@ -122,25 +122,46 @@ Future<List<TraCuuTTHCmodel>?> _getDanhSachThuTucHanhChinhTheoAPI(
 }
 
 @protected
-Future<List<TraCuuBienNhanModel>?> _getTraCuuSoBienNhanAPI(
+Future<TraCuuBienNhanModel?> _traCuuHoSo1CuaAPI(
 
     String soBienNhan) async {
   final String _url =
-      LocalVariable.urlAPI + '/api/Home/GetTraCuuSoBienNhan/$soBienNhan';
+      LocalVariable.urlAPI + '/api/Home/TraCuuHoSo1Cua/$soBienNhan';
 
   final String? json = await HttpRequest.instance.getAsync(_url);
   if (json == null) {
     return null;
   }
   final data = jsonDecode(json);
-  List<TraCuuBienNhanModel> _listData = <TraCuuBienNhanModel>[];
 
   if (data['result'] != null) {
-    final result = data['result'] as List;
-    _listData =
-        result.map((tagJson) => TraCuuBienNhanModel.fromJson(tagJson)).toList();
+    final TraCuuBienNhanModel _result =
+    TraCuuBienNhanModel.fromJson(data['result']);
 
-    return _listData;
+
+    return _result;
+  }
+
+  return null;
+}
+
+@protected
+Future<HoSo1Cua?> _traCuuHoSoDatDaiAPI( String maHoSo) async {
+  final String _url =
+      LocalVariable.urlAPI + '/api/Home/TraCuuHoSoDatDai/$maHoSo';
+
+  final String? json = await HttpRequest.instance.getAsync(_url);
+  if (json == null) {
+    return null;
+  }
+  final data = jsonDecode(json);
+
+  if (data['result'] != null) {
+    final HoSo1Cua _result =
+    HoSo1Cua.fromJson(data['result']);
+
+
+    return _result;
   }
 
   return null;
@@ -187,11 +208,16 @@ Future<ChiTietQuyHoachModel?> _getUrlTraCuuQuyHoachAPI(String thongTin) async {
 }
 
 @protected
-Future<List<ChatModel>?> _getAllHistoryChat(String userName) async {
-  final String _url = LocalVariable.urlAPI + '/api/Home/GetAllHistoryChat/$userName';
+Future<List<ChatModel>?> _getAllHistoryChat(String userName, int pageNum) async {
+  final String _url = LocalVariable.urlAPI + '/api/Home/GetAllHistoryChat';
+
+  final Map<String, dynamic> parms = {
+    'userName': userName,
+    'pageIndex': pageNum,
+  };
 
   final String? json =
-  await HttpRequest.instance.getAsync(_url);
+  await HttpRequest.instance.postAsync(_url, parms);
   if (json == null) {
     return null;
   }
@@ -202,7 +228,7 @@ Future<List<ChatModel>?> _getAllHistoryChat(String userName) async {
     final result = data['result'] as List;
     _listData =
         result.map((tagJson) => ChatModel.fromJson(tagJson)).toList();
-    return _listData.reversed.toList();
+    return _listData;
   }
   return null;
 }

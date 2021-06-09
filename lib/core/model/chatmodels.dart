@@ -1,3 +1,4 @@
+import 'package:package_chatbot/core/model/ho_so_1_cua.dart';
 import 'package:package_chatbot/core/model/tracuubiennhanmodel.dart';
 import 'package:package_chatbot/core/model/tracuudiadiemmodel.dart';
 import 'package:package_chatbot/core/model/tracuutthcmodel.dart';
@@ -19,35 +20,39 @@ class ChatModel {
   bool? isTTQHEnd = false;
   bool? isTTHS = false;
   int? isTTHSEnd = 0;
+
   // List<ListDanhMuc>? listDanhMuc;
   String? listDanhMuc;
+
   // List<TraCuuTTHCmodel>? listTTHC;
   String? listTTHC;
   String? traCuu;
   bool? isReadMore = false;
   DateTime? createDate;
 
-  ChatModel(
-      {
-        this.id,
-        this.isHeader = false,
-        this.isListDM = false,
-        this.isListDM1 = false,
-        this.isInfo = false,
-        this.isTTHC = false,
-        this.isTTQH = false,
-        this.isTTQHEnd = false,
-        this.isTTHS = false,
-        this.isReadMore = false,
-        this.isTTHSEnd = 0,
-        this.userName,
-        this.messRight,
-        this.messLeft,
-        this.listDanhMuc,
-        this.traCuu,
-        this.listTTHC,
-        this.createDate,
-      });
+  bool? line = false;
+
+  ChatModel({
+    this.id,
+    this.isHeader = false,
+    this.isListDM = false,
+    this.isListDM1 = false,
+    this.isInfo = false,
+    this.isTTHC = false,
+    this.isTTQH = false,
+    this.isTTQHEnd = false,
+    this.isTTHS = false,
+    this.isReadMore = false,
+    this.isTTHSEnd = 0,
+    this.userName,
+    this.messRight,
+    this.messLeft,
+    this.listDanhMuc,
+    this.traCuu,
+    this.listTTHC,
+    this.createDate,
+    this.line = false
+  });
 
   ChatModel.fromJson(Map<String, dynamic> json) {
     userName = json['userName'];
@@ -92,61 +97,107 @@ class ChatModel {
 }
 
 class TraCuu {
-  // List<TraCuuDiaDiemModels>? data;
-  String? data;
-  // TraCuuDiaDiemModels? data1;
-  String? data1;
-  // TraCuuBienNhanModel? traCuuBienNhan;
-  String? traCuuBienNhan;
-  // List<TraCuuTTHCmodel>? traCuuTTHCmodel;
-  String? traCuuTTHCmodel;
-  // ChiTietQuyHoachModel? chiTietQuyHoachModel;
-  String? chiTietQuyHoachModel;
+  List<TraCuuDiaDiemModels>? data;
+  TraCuuDiaDiemModels? data1;
+  TraCuuBienNhanModel? traCuuBienNhan;
+  HoSo1Cua? traCuuHoSo1Cua;
+  List<TraCuuTTHCmodel>? traCuuTTHCmodel;
+  ChiTietQuyHoachModel? chiTietQuyHoachModel;
   String? type;
-  // List<BotMessage>? dataBot;
-  String? dataBot;
+  List<BotMessage>? dataBot;
   int? banKinh;
   String? maLoaiDanhMuc;
   String? tenDM;
 
-
-  TraCuu({this.data,
-    this.type,
-    this.data1,
-    this.traCuuBienNhan,
-    this.traCuuTTHCmodel,
-    this.chiTietQuyHoachModel,
-    this.dataBot,
-    this.banKinh,
-    this.tenDM,
-    this.maLoaiDanhMuc});
+  TraCuu(
+      {this.data,
+      this.type,
+      this.data1,
+      this.traCuuBienNhan,
+      this.traCuuTTHCmodel,
+      this.chiTietQuyHoachModel,
+      this.dataBot,
+      this.banKinh,
+      this.tenDM,
+      this.maLoaiDanhMuc,
+      this.traCuuHoSo1Cua
+      });
 
   TraCuu.fromJson(Map<String, dynamic> json) {
-    data = json['data'];
-    data1 = json['data1'];
-    traCuuBienNhan = json['traCuuBienNhan'];
-    traCuuTTHCmodel = json['traCuuTTHCmodel'];
-    chiTietQuyHoachModel = json['chiTietQuyHoachModel'];
+    if (json['data'] != null) {
+      data = <TraCuuDiaDiemModels>[];
+      json['data'].forEach((v) {
+        data!.add(TraCuuDiaDiemModels.fromJson(v));
+      });
+    }
+
+    data1 = json['data1'] != null
+        ? TraCuuDiaDiemModels.fromJson(json['data1'])
+        : null;
+    traCuuBienNhan = json['traCuuBienNhan'] != null
+        ? TraCuuBienNhanModel.fromJson(json['traCuuBienNhan'])
+        : null;
+
+    if (json['traCuuTTHCmodel'] != null) {
+      traCuuTTHCmodel = <TraCuuTTHCmodel>[];
+      json['traCuuTTHCmodel'].forEach((v) {
+        traCuuTTHCmodel!.add(TraCuuTTHCmodel.fromJson(v));
+      });
+    }
+
+    chiTietQuyHoachModel = json['chiTietQuyHoachModel'] != null
+        ? ChiTietQuyHoachModel.fromJson(json['chiTietQuyHoachModel'])
+        : null;
     type = json['type'];
-    dataBot = json['dataBot'];
+
+    if (json['dataBot'] != null) {
+      dataBot = <BotMessage>[];
+      json['dataBot'].forEach((v) {
+        dataBot!.add(BotMessage.fromJson(v));
+      });
+    }
+
     banKinh = json['banKinh'];
     maLoaiDanhMuc = json['maLoaiDanhMuc'];
     tenDM = json['tenDM'];
-
+    traCuuHoSo1Cua = json['traCuuHoSo1Cua'] != null
+        ? HoSo1Cua.fromJson(json['traCuuHoSo1Cua'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['data'] = this.data;
-    data['data1'] = this.data1;
-    data['traCuuBienNhan'] = this.traCuuBienNhan;
-    data['traCuuTTHCmodel'] = this.traCuuTTHCmodel;
-    data['chiTietQuyHoachModel'] = this.chiTietQuyHoachModel;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+
+    if (data1 != null) {
+      data['data1'] = data1!.toJson();
+    }
+
+    if (traCuuBienNhan != null) {
+      data['traCuuBienNhan'] = traCuuBienNhan!.toJson();
+    }
+
+    if (traCuuTTHCmodel != null) {
+      data['traCuuTTHCmodel'] =
+          traCuuTTHCmodel!.map((v) => v.toJson()).toList();
+    }
+
+    if (chiTietQuyHoachModel != null) {
+      data['chiTietQuyHoachModel'] = chiTietQuyHoachModel!.toJson();
+    }
     data['type'] = this.type;
-    data['dataBot'] = this.dataBot;
+    if (dataBot != null) {
+      data['dataBot'] = dataBot!.map((v) => v.toJson()).toList();
+    }
     data['banKinh'] = this.banKinh;
     data['maLoaiDanhMuc'] = this.maLoaiDanhMuc;
     data['tenDM'] = this.tenDM;
+
+    if (traCuuHoSo1Cua != null) {
+      data['traCuuHoSo1Cua'] = traCuuHoSo1Cua!.toJson();
+    }
     return data;
   }
 }
