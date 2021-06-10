@@ -231,7 +231,7 @@ class ChatBloc extends BaseBloc {
     _insertHistoryChat(params);
 
     _sendChatBot(tinNhan).then((value) {
-      if (value.isNotEmpty) {
+      if (value!.isNotEmpty) {
         if (value.first.text == 'TCTTQH') {
           _isCheckTTQH = true;
           getAllPhuongXa();
@@ -343,10 +343,10 @@ class ChatBloc extends BaseBloc {
           }
         });
         break;
-      case 'TCTTHS':
-        sendThongTinHoSoDatDai(userName, isCheckTTHS: 0);
-
-        break;
+      // case 'TCTTHS':
+      //   sendThongTinHoSoDatDai(userName, isCheckTTHS: 0);
+      //
+      //   break;
 
       case 'TCTTQH':
         sendThongTinPhuongXa(userName, isCheck: 0);

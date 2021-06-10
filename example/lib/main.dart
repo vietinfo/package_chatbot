@@ -19,6 +19,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      // locale: DevicePreview.locale(context), // Add the locale here
+      // builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -57,6 +59,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController textEditingCtrHoTen = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -96,17 +100,64 @@ class _MyHomePageState extends State<MyHomePage> {
             // axis because Columns are vertical (the cross axis would be
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Text(
-                'Ứng dụng demo Chatbot của UBND Huyện Hóc Môn',
+            children: <Widget>[
+              // const Text(
+              //   'Ứng dụng demo Chatbot của UBND Huyện Hóc Môn',
+              // ),
+              const Text('Bạn vui lòng nhập tên và bấm chat ngay để bắt đầu'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+
+                    controller: textEditingCtrHoTen,
+                    keyboardType: TextInputType.multiline,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: const TextStyle(
+                        color: Color(0xff073551),
+                        fontStyle: FontStyle.normal,
+                        fontSize: 16.0),
+                    decoration: InputDecoration(
+                      hintText: 'Nhập ở đây',
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(8),
+                    )),
               ),
             ],
           ),
         ),
         floatingActionButton: GestureDetector(
           onTap: () {
+            if (textEditingCtrHoTen.text
+                .trim()
+                .isEmpty) {
+              Get.snackbar('Thông báo', 'Bạn vui lòng nhập tên của bạn!!!');
+            }else{
+              FocusScope.of(context)
+                  .unfocus();
             ExtensionFunction.instance.goChatBot(
-                userName: 'Nhan', userId: 0, fullName: 'Ng Nhan', soDienThoai: '');
+            userName: textEditingCtrHoTen.text,
+            userId: 0,
+            fullName: textEditingCtrHoTen.text,
+            soDienThoai: '');
+
+            }
+
           },
           child: Stack(
             children: [

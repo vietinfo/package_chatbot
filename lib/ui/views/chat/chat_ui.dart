@@ -586,6 +586,7 @@ class _ChatUIState extends State<ChatUI> {
                                                   Flexible(
                                                     child: Container(
                                                       child: TextField(
+
                                                         focusNode: focusNode,
                                                         controller: _mess,
                                                         textInputAction:
@@ -1411,7 +1412,7 @@ class _ChatUIState extends State<ChatUI> {
                   maxHeight: double.infinity,
                 ),
                 decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
                     color: Color(0xffffffff)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1583,7 +1584,7 @@ class _ChatUIState extends State<ChatUI> {
               maxHeight: double.infinity,
             ),
             decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(14)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
                 color: Color(0xffffffff)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1751,7 +1752,7 @@ class _ChatUIState extends State<ChatUI> {
               maxHeight: double.infinity,
             ),
             decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(14)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
                 color: Color(0xffffffff)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
