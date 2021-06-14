@@ -67,6 +67,7 @@ class _ChatUIState extends State<ChatUI> {
 
   late ScrollController listScrollController;
   int pageNumListMess = 2;
+  String? fullName;
 
   final dataKey = new GlobalKey();
 
@@ -103,6 +104,7 @@ class _ChatUIState extends State<ChatUI> {
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     timeLine = DateTime.now();
     userName = LocalVariable.userName;
+    fullName = LocalVariable.fullName;
     _getLocation();
     _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName, pageNum: _pageNum);
   }
@@ -1137,7 +1139,7 @@ class _ChatUIState extends State<ChatUI> {
          Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Chào mừng ${LocalVariable.fullName} đến với UBND huyện Hóc Môn! Tôi là BOT tự động. Mời Anh/Chị chọn dịch vụ cần hổ trợ hoặc muốn tra cứu thông tin :).',
+            'Chào mừng $fullName đến với UBND huyện Hóc Môn! Tôi là BOT tự động. Mời Anh/Chị chọn dịch vụ cần hổ trợ hoặc muốn tra cứu thông tin :).',
             textAlign: TextAlign.center,
           ),
         ),
