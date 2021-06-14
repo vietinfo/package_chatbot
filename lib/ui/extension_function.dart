@@ -10,7 +10,7 @@ class ExtensionFunction {
 
   void goChatBot(
       {required String userName,
-      required int userId,
+        int? userId,
       required String fullName,
       required String soDienThoai,
       String urlChatBotAPI = '',
@@ -18,7 +18,7 @@ class ExtensionFunction {
       int quanHuyenID = 0,
       String tenQuanHuyen = ''}) {
     LocalVariable.userName = userName;
-    LocalVariable.userId = userId;
+    //LocalVariable.userId = userId!;
     LocalVariable.fullName = fullName;
     LocalVariable.soDienThoai = soDienThoai;
     if (urlChatBotAPI.isNotEmpty) LocalVariable.urlAPI = urlChatBotAPI;

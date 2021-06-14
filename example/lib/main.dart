@@ -151,10 +151,9 @@ class _MyHomePageState extends State<MyHomePage> {
               FocusScope.of(context)
                   .unfocus();
             ExtensionFunction.instance.goChatBot(
-            userName: textEditingCtrHoTen.text,
-            userId: 0,
-            fullName: textEditingCtrHoTen.text,
-            soDienThoai: '');
+            userName: 'userName',
+            fullName: 'Nhan Test Ten',
+            soDienThoai: '000000000');
 
             }
 
