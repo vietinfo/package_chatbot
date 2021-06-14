@@ -108,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-
                     controller: textEditingCtrHoTen,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
@@ -143,20 +142,17 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         floatingActionButton: GestureDetector(
           onTap: () {
-            if (textEditingCtrHoTen.text
-                .trim()
-                .isEmpty) {
+            if (textEditingCtrHoTen.text.trim().isEmpty) {
               Get.snackbar('Thông báo', 'Bạn vui lòng nhập tên của bạn!!!');
-            }else{
-              FocusScope.of(context)
-                  .unfocus();
-            ExtensionFunction.instance.goChatBot(
-            userName: 'userName',
-            fullName: 'Nhan Test Ten',
-            soDienThoai: '000000000');
-
+            } else {
+              FocusScope.of(context).unfocus();
+              ExtensionFunction.instance.goChatBot(
+                  urlAPI: 'http://demo.vietinfo.tech:8090',
+                  urlChatBot: 'http://chatbot.vietinfo.tech:8088',
+                  userName: 'userName',
+                  fullName: 'Nhan Test Ten',
+                  soDienThoai: '000000000');
             }
-
           },
           child: Stack(
             children: [

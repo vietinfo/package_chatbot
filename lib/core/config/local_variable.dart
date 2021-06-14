@@ -7,7 +7,7 @@ class LocalVariable {
   static String soDienThoai = '';
 
   ///link local
-  static String urlAPI = 'http://demo.vietinfo.tech:8090';
-  static String urlChatBot = 'http://chatbot.vietinfo.tech:8088';
+  static String urlAPI = '';
+  static String urlChatBot = '';
   // static String urlTraCuuHoSo = 'https://hocmon-online.tphcm.gov.vn';
 }

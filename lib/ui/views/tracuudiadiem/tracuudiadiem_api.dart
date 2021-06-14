@@ -15,8 +15,8 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
   final Map<String, dynamic> parms = {
     'maCoQuan': maCoQuan,
     'tenCoQuan': tenCoQuan,
-    'lat':10.888536,
-    'long': 106.594979,
+    'lat':lat,
+    'long': long,
     'banKinh': banKinh,
     'maLoaiDanhMuc': maLoaiDanhMuc,
     'pageNum': pageNum,

@@ -230,7 +230,7 @@ class ChatBloc extends BaseBloc {
     };
     _insertHistoryChat(params);
 
-    _sendChatBot(tinNhan).then((value) {
+    _sendChatBot(tinNhan: tinNhan, userName: userName).then((value) {
       if (value!.isNotEmpty) {
         if (value.first.text == 'TCTTQH') {
           _isCheckTTQH = true;

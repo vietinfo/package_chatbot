@@ -43,8 +43,8 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
     final Map<String, dynamic> parms = {
       'maCoQuan': maCoQuan,
       'tenCoQuan': tenCoQuan,
-      'lat': 10.888536,
-      'long': 106.594979,
+      'lat': lat,
+      'long': long,
       'banKinh': banKinh,
       'maLoaiDanhMuc': maLoaiDanhMuc,
       'pageNum': pageNum,
@@ -71,12 +71,12 @@ Future<List<TraCuuDiaDiemModels>?> _traCuuDiaDiemAPI(
 }
 
 @protected
-Future<List<BotMessage>?> _sendChatBot(String tinNhan) async {
+Future<List<BotMessage>?> _sendChatBot({String? tinNhan, String? userName}) async {
 
   try {
     final String _url = LocalVariable.urlChatBot + '/webhooks/rest/webhook';
     final Map<String, dynamic> parms = {
-      'sender': 'Nhanahihi',
+      'sender': userName,
       'message': tinNhan,
     };
 
