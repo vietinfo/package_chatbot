@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
@@ -1429,7 +1430,7 @@ class ChatBloc extends BaseBloc {
   }
 
   void readMoreDD(String userName, TraCuu values, String? tinNhan, int? pageNum,
-      double? lat, double? long) {
+      double? lat, double? long, {required BuildContext context}) {
     if (values.dataBot != null) {
       var data = values.dataBot;
       // List<BotMessage> data = result.map((e) => BotMessage.fromJson(e)).toList();
@@ -1444,16 +1445,37 @@ class ChatBloc extends BaseBloc {
         if (value != null) {
           if (value.isNotEmpty) {
             if (value.length > 1) {
-              Get.to(
-                  BlocProvider(
+              ObjectData dataTCDD = ObjectData();
+              dataTCDD.banKinh =  data.first.custom!.data!.banKinh;
+              dataTCDD.tenDM = tinNhan;
+              dataTCDD.traCuuDiaDiem = value;
+              dataTCDD.botMess = data;
+              dataTCDD.checkDD = 1;
+
+
+
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
                       child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-                  arguments: {
-                    'banKinh': data.first.custom!.data!.banKinh,
-                    'tenDM': tinNhan,
-                    'result': value,
-                    'results': data,
-                    'checkDD': 1
-                  });
+                  settings: RouteSettings(
+                    arguments: dataTCDD,
+                  ),
+                ),
+              );
+
+              // Get.to(
+              //     BlocProvider(
+              //         child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+              //     arguments: {
+              //       'banKinh': data.first.custom!.data!.banKinh,
+              //       'tenDM': tinNhan,
+              //       'result': value,
+              //       'results': data,
+              //       'checkDD': 1
+              //     });
             }
           } else {
             _listMess.insert(
@@ -1469,15 +1491,34 @@ class ChatBloc extends BaseBloc {
         }
       });
     } else {
-      Get.to(BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-          arguments: {
-            'lat': lat,
-            'long': long,
-            'banKinh': values.banKinh,
-            'tenDM': values.tenDM,
-            'maLoaiDanhMuc': values.maLoaiDanhMuc,
-            'checkDD': 0
-          });
+
+      ObjectData dataTCDD = ObjectData();
+      dataTCDD.banKinh = values.banKinh;
+      dataTCDD.tenDM = values.tenDM;
+      dataTCDD.maLoaiDanhMuc = values.maLoaiDanhMuc;
+      dataTCDD.lat = lat;
+      dataTCDD.long = long;
+      dataTCDD.checkDD = 0;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+              child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+          settings: RouteSettings(
+            arguments: dataTCDD,
+          ),
+        ),
+      );
+      // Get.to(BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+      //     arguments: {
+      //       'lat': lat,
+      //       'long': long,
+      //       'banKinh': values.banKinh,
+      //       'tenDM': values.tenDM,
+      //       'maLoaiDanhMuc': values.maLoaiDanhMuc,
+      //       'checkDD': 0
+      //     });
     }
   }
 

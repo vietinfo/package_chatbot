@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/config/local_variable.dart';
@@ -16,6 +18,7 @@ class ExtensionFunction {
     required String soDienThoai,
     required String urlChatBot,
     required String urlAPI,
+    required BuildContext context,
   }) {
     LocalVariable.userName = userName;
     //LocalVariable.userId = userId!;
@@ -24,6 +27,11 @@ class ExtensionFunction {
     LocalVariable.urlAPI = urlAPI;
     LocalVariable.urlChatBot = urlChatBot;
 
-    Get.to(() => BlocProvider(child: ChatUI(), bloc: ChatBloc()));
+    //Get.to(() => BlocProvider(child: ChatUI(), bloc: ChatBloc()));
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BlocProvider(child: ChatUI(), bloc: ChatBloc()),
+    ));
   }
 }

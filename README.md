@@ -1,8 +1,9 @@
 # package_chatbot
 Gọi hàm này để tích hợp vào app.
-Param cần truyền: urlAPI, urlChatBot , userName, fullName và soDienThoai.
+Param cần truyền: context, urlAPI, urlChatBot , userName, fullName và soDienThoai.
 
  ExtensionFunction.instance.goChatBot(
+     context: context,
      urlAPI: 'urlAPI',
      urlChatBot: 'urlChatBot',
      userName: 'userName',

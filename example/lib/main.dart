@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       // locale: DevicePreview.locale(context), // Add the locale here
       // builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
@@ -147,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else {
               FocusScope.of(context).unfocus();
               ExtensionFunction.instance.goChatBot(
+                  context: context,
                   urlAPI: 'http://demo.vietinfo.tech:8090',
                   urlChatBot: 'http://chatbot.vietinfo.tech:8088',
                   userName: 'userName',
