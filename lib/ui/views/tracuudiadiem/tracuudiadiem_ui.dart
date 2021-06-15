@@ -18,48 +18,49 @@ class TraCuuDiaDiemUI extends StatefulWidget {
 
 class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
   late TraCuuDiaDiemBloc _traCuuDiaDiemBloc;
-  late List<TraCuuDiaDiemModels> _traCuuDiaDiem;
-  late List<BotMessage> _botMess;
-  late String _tenDM;
-  late int _banKinh;
-  late String _maLoaiDanhMuc;
-  late int _checkDD;
-  late double _lat;
-  late double _long;
+  List<TraCuuDiaDiemModels>? _traCuuDiaDiem;
+  List<BotMessage>? _botMess;
+  String? _tenDM;
+  int? _banKinh;
+  String? _maLoaiDanhMuc;
+  int? _checkDD;
+  double? _lat;
+  double? _long;
   int _pageNum = 1;
 
   @override
   void initState() {
-
     // TODO: implement initState
     super.initState();
     _traCuuDiaDiemBloc = BlocProvider.of<TraCuuDiaDiemBloc>(context);
-    final Map data = Map.from(Get.arguments);
-    _traCuuDiaDiem = data['result'];
-    _botMess = data['results'];
-    _tenDM = data['tenDM'];
-    _banKinh = data['banKinh'];
-    _maLoaiDanhMuc = data['maLoaiDanhMuc'];
-    _checkDD = data['checkDD'];
-    _lat = data['lat'];
-    _long = data['long'];
-    if (_checkDD != 1) {
-      _traCuuDiaDiemBloc.traCuuDD(
-          lat: _lat,
-          long: _long,
-          banKinh: _banKinh,
-          maLoaiDanhMuc: _maLoaiDanhMuc,
-          pageNum: _pageNum);
-    } else {
-      _traCuuDiaDiemBloc.traCuuDD1(
-          lat: _lat,
-          long: _long,
-          banKinh: _botMess.first.custom!.data!.banKinh,
-          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
-          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
-          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
-          pageNum: _pageNum);
-    }
+    Future.delayed(Duration.zero, () {
+      final data = ModalRoute.of(context)!.settings.arguments as ObjectData;
+      _traCuuDiaDiem = data.traCuuDiaDiem;
+      _botMess = data.botMess;
+      _tenDM = data.tenDM;
+      _banKinh = data.banKinh;
+      _maLoaiDanhMuc = data.maLoaiDanhMuc;
+      _checkDD = data.checkDD;
+      _lat = data.lat;
+      _long = data.long;
+      if (_checkDD != 1) {
+        _traCuuDiaDiemBloc.traCuuDD(
+            lat: _lat,
+            long: _long,
+            banKinh: _banKinh,
+            maLoaiDanhMuc: _maLoaiDanhMuc,
+            pageNum: _pageNum);
+      } else {
+        _traCuuDiaDiemBloc.traCuuDD1(
+            lat: _lat,
+            long: _long,
+            banKinh: _botMess!.first.custom!.data!.banKinh,
+            maLoaiDanhMuc: _botMess!.first.custom!.data!.maLoaiDanhMuc,
+            tenCoQuan: _botMess!.first.custom!.data!.tenCoQuan,
+            maCoQuan: _botMess!.first.custom!.data!.maCoQuan,
+            pageNum: _pageNum);
+      }
+    });
   }
 
   @override
@@ -72,7 +73,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Tra cứu địa điểm $_tenDM'),
+          title: Text('Tra cứu địa điểm'),
           centerTitle: true,
         ),
         body: StreamBuilder(
@@ -88,10 +89,10 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                       funcLoadMore: _loadMore,
                       isLoadMore: _traCuuDiaDiemBloc.isLoadMore,
                       showLoading: _traCuuDiaDiemBloc.showLoading,
-                      itemCount: _traCuuDiaDiem.length,
+                      itemCount: _traCuuDiaDiem!.length,
                       itemBuilder: (context, index) {
                         final TraCuuDiaDiemModels traCuuDiaDiem =
-                        _traCuuDiaDiem[index];
+                            _traCuuDiaDiem![index];
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, bottom: 8.0, top: 5),
@@ -101,7 +102,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                             ),
                             decoration: const BoxDecoration(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(14)),
+                                    BorderRadius.all(Radius.circular(14)),
                                 boxShadow: [
                                   BoxShadow(
                                       offset: Offset(0, 3),
@@ -134,7 +135,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Điện thoại:',
@@ -165,7 +166,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Website: ',
@@ -196,7 +197,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Địa chỉ: ',
@@ -224,7 +225,7 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
                                     ],
                                   ),
                                 ),
-                                if (_traCuuDiaDiem[index].distance != 0)
+                                if (_traCuuDiaDiem![index].distance != 0)
                                   const Divider(),
                                 if (traCuuDiaDiem.distance != 0)
                                   Padding(
@@ -301,11 +302,34 @@ class _TraCuuDiaDiemUIState extends State<TraCuuDiaDiemUI> {
       _traCuuDiaDiemBloc.traCuuDD1(
           lat: _lat,
           long: _long,
-          banKinh: _botMess.first.custom!.data!.banKinh,
-          maLoaiDanhMuc: _botMess.first.custom!.data!.maLoaiDanhMuc,
-          tenCoQuan: _botMess.first.custom!.data!.tenCoQuan,
-          maCoQuan: _botMess.first.custom!.data!.maCoQuan,
+          banKinh: _botMess!.first.custom!.data!.banKinh,
+          maLoaiDanhMuc: _botMess!.first.custom!.data!.maLoaiDanhMuc,
+          tenCoQuan: _botMess!.first.custom!.data!.tenCoQuan,
+          maCoQuan: _botMess!.first.custom!.data!.maCoQuan,
           pageNum: _pageNum++);
     }
   }
+}
+
+class ObjectData {
+  TraCuuDiaDiemBloc? traCuuDiaDiemBloc;
+  List<TraCuuDiaDiemModels>? traCuuDiaDiem;
+  List<BotMessage>? botMess;
+  String? tenDM;
+  int? banKinh;
+  String? maLoaiDanhMuc;
+  int? checkDD;
+  double? lat;
+  double? long;
+
+  ObjectData(
+      {this.traCuuDiaDiemBloc,
+      this.traCuuDiaDiem,
+      this.botMess,
+      this.tenDM,
+      this.banKinh,
+      this.maLoaiDanhMuc,
+      this.checkDD,
+      this.lat,
+      this.long});
 }

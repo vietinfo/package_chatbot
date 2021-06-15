@@ -22,9 +22,13 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
     // TODO: implement initState
     super.initState();
     _chiTietThuTucBloc = BlocProvider.of<ChiTietThuTucBloc>(context);
-    final Map data = Map.from(Get.arguments);
-    _thuTucID = data['result'];
-    _chiTietThuTucBloc.getChiTietThuTuc(_thuTucID!);
+    Future.delayed(Duration.zero, () {
+      final  data = ModalRoute.of(context)!.settings.arguments as int;
+      _thuTucID = data;
+      _chiTietThuTucBloc.getChiTietThuTuc(_thuTucID!);
+    });
+
+
   }
 
   @override
@@ -35,7 +39,7 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
             icon: const Icon(
               Icons.arrow_back_ios,

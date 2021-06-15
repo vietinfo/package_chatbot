@@ -50,7 +50,7 @@ class _ChatUIState extends State<ChatUI> {
   bool _checkTTHS = false;
   bool _checkTTQH = false;
   bool _checkTTQH1 = false;
-   int _pageNum = 1;
+  int _pageNum = 1;
   bool _checkKB = false;
   int _checkPX = 0;
   int _checkHS = 0;
@@ -106,7 +106,8 @@ class _ChatUIState extends State<ChatUI> {
     userName = LocalVariable.userName;
     fullName = LocalVariable.fullName;
     _getLocation();
-    _chatBloc.getAllHistoryChat(tinNhan: 'null', userName: userName, pageNum: _pageNum);
+    _chatBloc.getAllHistoryChat(
+        tinNhan: 'null', userName: userName, pageNum: _pageNum);
   }
 
   @override
@@ -122,7 +123,7 @@ class _ChatUIState extends State<ChatUI> {
             children: <Widget>[
               IconButton(
                 onPressed: () {
-                  Get.back();
+                  Navigator.pop(context);
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
@@ -512,7 +513,6 @@ class _ChatUIState extends State<ChatUI> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-
                                               ),
                                               child: Row(
                                                 children: [
@@ -588,7 +588,6 @@ class _ChatUIState extends State<ChatUI> {
                                                   Flexible(
                                                     child: Container(
                                                       child: TextField(
-
                                                         focusNode: focusNode,
                                                         controller: _mess,
                                                         textInputAction:
@@ -640,14 +639,14 @@ class _ChatUIState extends State<ChatUI> {
                                                               _mess.text);
                                                         }
                                                         if (_checkTTHS) {
-                                                          if(_checkHoSo == 'HoSoDatDai'){
+                                                          if (_checkHoSo ==
+                                                              'HoSoDatDai') {
                                                             _sendThongTinHoSoDatDai(
                                                                 _mess.text);
-                                                          }else{
+                                                          } else {
                                                             _sendThongTinHoSo1Cua(
                                                                 _mess.text);
                                                           }
-
                                                         }
                                                         _sendBot();
                                                       },
@@ -663,32 +662,37 @@ class _ChatUIState extends State<ChatUI> {
                                                     ),
                                                   Padding(
                                                     padding:
-                                                    const EdgeInsets.only(right: 15),
+                                                        const EdgeInsets.only(
+                                                            right: 15),
                                                     child: (snapshot.data!)
-                                                        ? const SizedBox.shrink()
+                                                        ? const SizedBox
+                                                            .shrink()
                                                         : InkWell(
-                                                      onTap: () => showMicSheet(
-                                                          homeContext:
-                                                          this.context,
-                                                          resultSpeech:
-                                                          _voiceCheck),
-                                                      child: const Padding(
-                                                        padding:
-                                                        EdgeInsets.only(
-                                                            top: 2,
-                                                            bottom: 2),
-                                                        child: Icon(
-                                                          Icons.keyboard_voice,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                            onTap: () => showMicSheet(
+                                                                homeContext: this
+                                                                    .context,
+                                                                resultSpeech:
+                                                                    _voiceCheck),
+                                                            child:
+                                                                const Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 2,
+                                                                      bottom:
+                                                                          2),
+                                                              child: Icon(
+                                                                Icons
+                                                                    .keyboard_voice,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                          ),
                                                   )
                                                 ],
                                               ),
                                             ),
                                           ),
-
                                         ],
                                       ),
                                     ),
@@ -799,22 +803,19 @@ class _ChatUIState extends State<ChatUI> {
               child: NotificationListener<ScrollNotification>(
                 onNotification: (scrollNotification) {
                   if (scrollNotification is ScrollUpdateNotification) {
-
                     if (scrollNotification.metrics.pixels != 0) {
                       _chatBloc.showBottomScroll(true);
                     } else {
                       _chatBloc.showBottomScroll(false);
                     }
-
                   }
                   if (scrollNotification is ScrollEndNotification) {
                     final before = scrollNotification.metrics.extentBefore;
-                    final max = scrollNotification.metrics.maxScrollExtent ;
-
+                    final max = scrollNotification.metrics.maxScrollExtent;
 
                     if (before == max) {
-                      _chatBloc.loadMore(userName: userName,pageNum: pageNumListMess++);
-
+                      _chatBloc.loadMore(
+                          userName: userName, pageNum: pageNumListMess++);
                     }
                   }
                   return true;
@@ -831,8 +832,8 @@ class _ChatUIState extends State<ChatUI> {
                         StreamBuilder(
                             key: dataKey,
                             stream: _chatBloc.mess.stream,
-                            builder:
-                                (context, AsyncSnapshot<List<ChatModel>> snapshot) {
+                            builder: (context,
+                                AsyncSnapshot<List<ChatModel>> snapshot) {
                               if (snapshot.hasData) {
                                 _chatModel = snapshot.data;
 
@@ -869,82 +870,99 @@ class _ChatUIState extends State<ChatUI> {
                                   children: _chatModel!.reversed.map((e) {
                                     var index = _chatModel!.indexOf(e);
                                     tenDM = e.messRight;
-                                    return (index == _chatModel!.length - 1 && e.isInfo == false)?
-                                    Container(
-                                      height: 30,
-                                      alignment: Alignment.center,
-                                      child:  Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          const SpinKitWave(color: Colors.blue, type: SpinKitWaveType.center, size: 15,),
-                                        ],
-                                      ),
-                                    ):Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        if(e.line == true)  _lineNew(),
-                                        if (e.isInfo == true) _info(),
-                                        if (e.messRight != null)
-                                          Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: GestureDetector(
-                                                onTap: () {},
-                                                child: MessageTile(
-                                                  message: e.messRight!,
-                                                  sendByMe: true,
+                                    return (index == _chatModel!.length - 1 &&
+                                            e.isInfo == false)
+                                        ? Container(
+                                            height: 30,
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SpinKitWave(
+                                                  color: Colors.blue,
+                                                  type: SpinKitWaveType.center,
+                                                  size: 15,
                                                 ),
-                                              )),
-                                        if (e.messLeft != null)
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: () {},
-                                              child: MessageTile(
-                                                message: e.messLeft!,
-                                                sendByMe: false,
-                                              ),
+                                              ],
                                             ),
-                                          ),
-                                        if (e.isListDM == true)
-                                          _buildColumnDM(e.listDanhMuc!),
-                                        if (e.isTTHC == true)
-                                          _buildColumnTTHC(e.listTTHC!),
-                                        if (e.isHeader == true)
-                                          Column(
+                                          )
+                                        : Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              StreamBuilder(
-                                                  stream: _chatBloc.dsChucNang.stream,
-                                                  builder: (context,
-                                                      AsyncSnapshot<
-                                                          List<
-                                                              DanhMucChucNangModels>>
-                                                      snapshot) {
-                                                    _danhMucChucNangModels =
-                                                        snapshot.data;
-                                                    if (snapshot.hasData) {
-                                                      return _buildColumnDSChuNang();
-                                                    } else {
-                                                      return const SizedBox.shrink();
-                                                    }
-                                                  })
+                                              if (e.line == true) _lineNew(),
+                                              if (e.isInfo == true) _info(),
+                                              if (e.messRight != null)
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                      onTap: () {},
+                                                      child: MessageTile(
+                                                        message: e.messRight!,
+                                                        sendByMe: true,
+                                                      ),
+                                                    )),
+                                              if (e.messLeft != null)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {},
+                                                    child: MessageTile(
+                                                      message: e.messLeft!,
+                                                      sendByMe: false,
+                                                    ),
+                                                  ),
+                                                ),
+                                              if (e.isListDM == true)
+                                                _buildColumnDM(e.listDanhMuc!),
+                                              if (e.isTTHC == true)
+                                                _buildColumnTTHC(e.listTTHC!),
+                                              if (e.isHeader == true)
+                                                Column(
+                                                  children: [
+                                                    StreamBuilder(
+                                                        stream: _chatBloc
+                                                            .dsChucNang.stream,
+                                                        builder: (context,
+                                                            AsyncSnapshot<
+                                                                    List<
+                                                                        DanhMucChucNangModels>>
+                                                                snapshot) {
+                                                          _danhMucChucNangModels =
+                                                              snapshot.data;
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            return _buildColumnDSChuNang();
+                                                          } else {
+                                                            return const SizedBox
+                                                                .shrink();
+                                                          }
+                                                        })
+                                                  ],
+                                                ),
+                                              if (e.traCuu != null)
+                                                _data(e.traCuu!, e.isReadMore!)
                                             ],
-                                          ),
-                                        if (e.traCuu != null)
-                                          _data(e.traCuu!, e.isReadMore!)
-                                      ],
-                                    );
+                                          );
                                   }).toList(),
                                 );
                               } else {
                                 return const Center(
                                   child: Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child:  const SpinKitWave(color: Colors.blue, type: SpinKitWaveType.center, size: 15,),
+                                    child: const SpinKitWave(
+                                      color: Colors.blue,
+                                      type: SpinKitWaveType.center,
+                                      size: 15,
+                                    ),
                                   ),
                                 );
                               }
                             }),
-
                       ],
                     ),
                   ),
@@ -1074,34 +1092,31 @@ class _ChatUIState extends State<ChatUI> {
     );
   }
 
-  Widget _lineNew(){
+  Widget _lineNew() {
     return Row(children: <Widget>[
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 15.0),
           child: SizedBox(
               child: Divider(
-                color: Colors.black,
-                height: 10,
-              )),
+            color: Colors.black,
+            height: 10,
+          )),
         ),
       ),
       Text(
-        DateFormat('kk:mm - dd/MM/yyyy')
-            .format(timeLine),
+        DateFormat('kk:mm - dd/MM/yyyy').format(timeLine),
         style: const TextStyle(
-            fontSize: 15,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold),
+            fontSize: 15, color: Colors.grey, fontWeight: FontWeight.bold),
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 15.0),
           child: SizedBox(
               child: Divider(
-                color: Colors.black,
-                height: 10,
-              )),
+            color: Colors.black,
+            height: 10,
+          )),
         ),
       ),
     ]);
@@ -1136,14 +1151,13 @@ class _ChatUIState extends State<ChatUI> {
         const SizedBox(
           height: 10,
         ),
-         Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Chào mừng $fullName đến với UBND huyện Hóc Môn! Tôi là BOT tự động. Mời Anh/Chị chọn dịch vụ cần hổ trợ hoặc muốn tra cứu thông tin :).',
             textAlign: TextAlign.center,
           ),
         ),
-
       ],
     );
   }
@@ -1256,7 +1270,8 @@ class _ChatUIState extends State<ChatUI> {
   Widget _buildColumnDM(String listDanhMucs) {
     var json = jsonDecode(listDanhMucs);
     final result = json as List;
-    List<ListDanhMuc> listDanhMuc = result.map((e) => ListDanhMuc.fromJson(e)).toList();
+    List<ListDanhMuc> listDanhMuc =
+        result.map((e) => ListDanhMuc.fromJson(e)).toList();
     return Align(
       alignment: Alignment.bottomLeft,
       child: Padding(
@@ -1277,26 +1292,28 @@ class _ChatUIState extends State<ChatUI> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        if(listDanhMuc[index].maLoaiDanhMuc == 'HoSoDatDai'){
+                        if (listDanhMuc[index].maLoaiDanhMuc == 'HoSoDatDai') {
                           //_chatBloc.checkHuy.sink.add(true);
                           _checkTTHS = true;
                           _checkHoSo = listDanhMuc[index].maLoaiDanhMuc;
-                          _chatBloc.sendThongTinHoSoDatDai(userName, isCheckTTHS: 0,tinNhan: listDanhMuc[index].tenLoaiDanhMuc,checkClick: true);
-
-
-                        }else if(listDanhMuc[index].maLoaiDanhMuc == 'HoSo1Cua'){
+                          _chatBloc.sendThongTinHoSoDatDai(userName,
+                              isCheckTTHS: 0,
+                              tinNhan: listDanhMuc[index].tenLoaiDanhMuc,
+                              checkClick: true);
+                        } else if (listDanhMuc[index].maLoaiDanhMuc ==
+                            'HoSo1Cua') {
                           //_chatBloc.checkHuy.sink.add(true);
                           _checkTTHS = true;
                           _checkHoSo = listDanhMuc[index].maLoaiDanhMuc;
-                          _chatBloc.sendThongTinHoSo1Cua(userName, isCheckTTHS: 0,tinNhan: listDanhMuc[index].tenLoaiDanhMuc,checkClick: true);
-                        }else{
+                          _chatBloc.sendThongTinHoSo1Cua(userName,
+                              isCheckTTHS: 0,
+                              tinNhan: listDanhMuc[index].tenLoaiDanhMuc,
+                              checkClick: true);
+                        } else {
                           _chatBloc.messDanhMuc(
                               userName: userName,
                               tenDanhMuc: listDanhMuc[index].tenLoaiDanhMuc);
                         }
-
-
-
 
                         maLoaiDM = listDanhMuc[index].maLoaiDanhMuc;
                         tenDM = listDanhMuc[index].tenLoaiDanhMuc;
@@ -1337,7 +1354,8 @@ class _ChatUIState extends State<ChatUI> {
   Widget _buildColumnTTHC(String listTTHCs) {
     var json = jsonDecode(listTTHCs);
     final result = json as List;
-    List<TraCuuTTHCmodel> listTTHC = result.map((e) => TraCuuTTHCmodel.fromJson(e)).toList();
+    List<TraCuuTTHCmodel> listTTHC =
+        result.map((e) => TraCuuTTHCmodel.fromJson(e)).toList();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -1357,8 +1375,7 @@ class _ChatUIState extends State<ChatUI> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      _chatBloc.getDSTTHC(
-                          userName, listTTHC[index].linhVucID!,
+                      _chatBloc.getDSTTHC(userName, listTTHC[index].linhVucID!,
                           tinNhan: listTTHC[index].tenLinhVuc);
                       _checkTTQH = false;
                       _scrollEndScreen();
@@ -1424,7 +1441,9 @@ class _ChatUIState extends State<ChatUI> {
                       child: Row(
                         children: [
                           const Icon(Icons.add_business),
-                          const SizedBox(width: 10,),
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Expanded(
                             child: Text(
                               '${data!.tenCoQuan ?? ' '} ',
@@ -1507,8 +1526,8 @@ class _ChatUIState extends State<ChatUI> {
                           ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => _openMapsSheet(data.viDo!,
-                                  data.kinhDo!, data.tenCoQuan!),
+                              onTap: () => _openMapsSheet(
+                                  data.viDo!, data.kinhDo!, data.tenCoQuan!),
                               child: Text(
                                 data.diaChi!,
                                 style: const TextStyle(
@@ -1559,7 +1578,8 @@ class _ChatUIState extends State<ChatUI> {
                   _chatBloc.sendController.sink.add(false);
                   _chatBloc.checkHuy.sink.add(false);
                   _chatBloc.readMoreDD(
-                      userName, custom, _mess.text, 1, lat, long);
+                      userName, custom, _mess.text, 1, lat, long,
+                      context: context);
                 },
                 child: Align(
                     alignment: Alignment.bottomRight,
@@ -1748,7 +1768,7 @@ class _ChatUIState extends State<ChatUI> {
         var dataTraCuuHSDatDai = custom.traCuuHSDatDai;
         return Padding(
           padding:
-          const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
+              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 5),
           child: Container(
             constraints: const BoxConstraints(
               maxHeight: double.infinity,
@@ -1910,54 +1930,74 @@ class _ChatUIState extends State<ChatUI> {
                 ),
                 const Divider(),
                 ExpansionTileCustom(
-                   //childrenPadding: EdgeInsets.all(10).copyWith(top: 0),
-                     title:Text('Thông tin xử lý',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
-                   children: [
-                     const Divider(),
-                     Row(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Expanded(
-                           child: Column(
-                             children: [
-                               const Text('Trách nhiệm',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue)),
-                               Padding(
-                                 padding: const EdgeInsets.all(8.0),
-                                 child: Text('${dataTraCuuHSDatDai.treeJobCycle!.processOrg}',textAlign: TextAlign.center,),
-                               ),
-                             ],
-                           ),
-                         ),
-                         Expanded(
-                           child: Column(
-                             children: [
-                               const Text('Người thực hiện',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue)),
-                               Padding(
-                                 padding: const EdgeInsets.all(8.0),
-                                 child: Text('${dataTraCuuHSDatDai.treeJobCycle!.roleName}',textAlign: TextAlign.center,),
-                               ),
-                             ],
-                           ),
-                         ),
-                         Expanded(
-                           child: Column(
-                             children: [
-                               const Text('Thời gian',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue)),
-
-                               Padding(
-                                 padding: const EdgeInsets.all(8.0),
-                                 child: Text('${dataTraCuuHSDatDai.treeJobCycle!.receiveDate}',textAlign: TextAlign.center),
-                               ),
-
-                             ],
-                           ),
-                         ),
-
-                       ],
-                     )
-                   ],
-                 ),
+                  //childrenPadding: EdgeInsets.all(10).copyWith(top: 0),
+                  title: Text(
+                    'Thông tin xử lý',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  children: [
+                    const Divider(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Text('Trách nhiệm',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '${dataTraCuuHSDatDai.treeJobCycle!.processOrg}',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Text('Người thực hiện',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '${dataTraCuuHSDatDai.treeJobCycle!.roleName}',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Text('Thời gian',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    '${dataTraCuuHSDatDai.treeJobCycle!.receiveDate}',
+                                    textAlign: TextAlign.center),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ],
             ),
           ),
@@ -1974,10 +2014,20 @@ class _ChatUIState extends State<ChatUI> {
               return GestureDetector(
                 onTap: () {
                   _chatBloc.checkHuy.sink.add(false);
-                  Get.to(
-                      BlocProvider(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
                           child: ChiTietThuTucUI(), bloc: ChiTietThuTucBloc()),
-                      arguments: {'result': data[index].thuTucID});
+                      settings: RouteSettings(
+                        arguments: data[index].thuTucID,
+                      ),
+                    ),
+                  );
+                  // Get.to(
+                  //     BlocProvider(
+                  //         child: ChiTietThuTucUI(), bloc: ChiTietThuTucBloc()),
+                  //     arguments: {'result': data[index].thuTucID});
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -2113,8 +2163,13 @@ class _ChatUIState extends State<ChatUI> {
                         ),
                       ])),
                       InkWell(
-                        onTap: () =>
-                            Get.to(WebViewWidget(dataTraCuuTTQH.gisUrl!)),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  WebViewWidget(dataTraCuuTTQH.gisUrl!)),
+                        ),
+                        // Get.to(WebViewWidget(dataTraCuuTTQH.gisUrl!)),
                         child: const Text(
                           'Xem chi tiết',
                           style: TextStyle(
@@ -2206,7 +2261,6 @@ class _ChatUIState extends State<ChatUI> {
 
   void _sendBot() {
     if (_mess.text.trim().isNotEmpty) {
-
       _chatBloc.sendMessBot(userName, _mess.text,
           danhMucChucNang: _danhMucChucNangModels, lat: lat, long: long);
 
