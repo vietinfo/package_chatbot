@@ -239,7 +239,9 @@ class ChatBloc extends BaseBloc {
         } else {
           _isCheckTTQH = false;
         }
-        if (value.first.text == 'TCTTHS' || value.first.text == 'HoSo1Cua' || value.first.text == 'HoSoDatDai') {
+        if (value.first.text == 'TCTTHS' ||
+            value.first.text == 'HoSo1Cua' ||
+            value.first.text == 'HoSoDatDai') {
           _isCheckTTHS = true;
         } else {
           _isCheckTTHS = false;
@@ -662,7 +664,7 @@ class ChatBloc extends BaseBloc {
         ]
       };
       _insertHistoryChat(params);
-    }else{
+    } else {
       troGiup(userName);
     }
   }
@@ -683,7 +685,7 @@ class ChatBloc extends BaseBloc {
         ]
       };
       _insertHistoryChat(params);
-    }else{
+    } else {
       troGiup(userName);
     }
   }
@@ -940,7 +942,6 @@ class ChatBloc extends BaseBloc {
       case 'HoSo1Cua':
         sendThongTinHoSo1Cua(userName, tinNhan: tinNhan, isCheckTTHS: 0);
 
-
         break;
       case 'HoSoDatDai':
         sendThongTinHoSoDatDai(userName, tinNhan: tinNhan, isCheckTTHS: 0);
@@ -1139,13 +1140,13 @@ class ChatBloc extends BaseBloc {
     typing.sink.add(true);
     _getUrlTraCuuQuyHoachAPI(thongTin).then((value) {
       if (value != null) {
+        typing.sink.add(false);
         TraCuu data = TraCuu(
             chiTietQuyHoachModel: value,
             type: 'action_tra_cuu_thong_tin_quy_hoach');
 
         _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
         mess.sink.add(_listMess);
-        typing.sink.add(false);
 
         var params = {
           'param': [
@@ -1177,7 +1178,7 @@ class ChatBloc extends BaseBloc {
     checkHuy.sink.add(true);
     if (isCheckTTHS == 0) {
       //checkHuy.sink.add(true);
-     if(checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
+      if (checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
       _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
@@ -1193,7 +1194,8 @@ class ChatBloc extends BaseBloc {
 
       var params = {
         'param': [
-          if(checkClick) ChatModel(userName: userName, messRight: tinNhan).toJson(),
+          if (checkClick)
+            ChatModel(userName: userName, messRight: tinNhan).toJson(),
           ChatModel(userName: userName, messLeft: 'Hướng dẫn tra cứu').toJson(),
           ChatModel(
             userName: userName,
@@ -1226,8 +1228,8 @@ class ChatBloc extends BaseBloc {
 
       _traCuuHoSo1CuaAPI(tinNhan!).then((value) {
         if (value != null) {
-          TraCuu data = TraCuu(
-              traCuuHS1Cua: value, type: 'action_tra_cuu_ho_so_1_cua');
+          TraCuu data =
+              TraCuu(traCuuHS1Cua: value, type: 'action_tra_cuu_ho_so_1_cua');
 
           _listMess.insert(
               0,
@@ -1281,10 +1283,10 @@ class ChatBloc extends BaseBloc {
   }
 
   void sendThongTinHoSoDatDai(String userName,
-      {String? tinNhan, int? isCheckTTHS,bool checkClick = false}) {
+      {String? tinNhan, int? isCheckTTHS, bool checkClick = false}) {
     checkHuy.sink.add(true);
     if (isCheckTTHS == 0) {
-      if(checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
+      if (checkClick) _listMess.insert(0, ChatModel(messRight: tinNhan));
       _listMess.insert(0, ChatModel(messLeft: 'Hướng dẫn tra cứu'));
       _listMess.insert(
           0,
@@ -1299,7 +1301,8 @@ class ChatBloc extends BaseBloc {
 
       var params = {
         'param': [
-          if(checkClick) ChatModel(userName: userName, messRight: tinNhan).toJson(),
+          if (checkClick)
+            ChatModel(userName: userName, messRight: tinNhan).toJson(),
           ChatModel(userName: userName, messLeft: 'Hướng dẫn tra cứu').toJson(),
           ChatModel(
             userName: userName,
@@ -1430,10 +1433,10 @@ class ChatBloc extends BaseBloc {
   }
 
   void readMoreDD(String userName, TraCuu values, String? tinNhan, int? pageNum,
-      double? lat, double? long, {required BuildContext context}) {
+      double? lat, double? long,
+      {required BuildContext context}) {
     if (values.dataBot != null) {
       var data = values.dataBot;
-      // List<BotMessage> data = result.map((e) => BotMessage.fromJson(e)).toList();
 
       _traCuuDiaDiemAPI(
               banKinh: data!.first.custom!.data!.banKinh,
@@ -1445,15 +1448,12 @@ class ChatBloc extends BaseBloc {
         if (value != null) {
           if (value.isNotEmpty) {
             if (value.length > 1) {
-              ObjectData dataTCDD = ObjectData();
-              dataTCDD.banKinh =  data.first.custom!.data!.banKinh;
-              dataTCDD.tenDM = tinNhan;
-              dataTCDD.traCuuDiaDiem = value;
-              dataTCDD.botMess = data;
-              dataTCDD.checkDD = 1;
-
-
-
+              ObjectData dataTCDD = ObjectData()
+                ..banKinh = data.first.custom!.data!.banKinh
+                ..tenDM = tinNhan
+                ..traCuuDiaDiem = value
+                ..botMess = data
+                ..checkDD = 1;
 
               Navigator.push(
                 context,
@@ -1466,16 +1466,6 @@ class ChatBloc extends BaseBloc {
                 ),
               );
 
-              // Get.to(
-              //     BlocProvider(
-              //         child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-              //     arguments: {
-              //       'banKinh': data.first.custom!.data!.banKinh,
-              //       'tenDM': tinNhan,
-              //       'result': value,
-              //       'results': data,
-              //       'checkDD': 1
-              //     });
             }
           } else {
             _listMess.insert(
@@ -1491,34 +1481,24 @@ class ChatBloc extends BaseBloc {
         }
       });
     } else {
-
-      ObjectData dataTCDD = ObjectData();
-      dataTCDD.banKinh = values.banKinh;
-      dataTCDD.tenDM = values.tenDM;
-      dataTCDD.maLoaiDanhMuc = values.maLoaiDanhMuc;
-      dataTCDD.lat = lat;
-      dataTCDD.long = long;
-      dataTCDD.checkDD = 0;
+      ObjectData dataTCDD = ObjectData()
+        ..banKinh = values.banKinh
+        ..tenDM = values.tenDM
+        ..maLoaiDanhMuc = values.maLoaiDanhMuc
+        ..lat = lat
+        ..long = long
+        ..checkDD = 0;
 
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BlocProvider(
-              child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+          builder: (context) =>
+              BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
           settings: RouteSettings(
             arguments: dataTCDD,
           ),
         ),
       );
-      // Get.to(BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-      //     arguments: {
-      //       'lat': lat,
-      //       'long': long,
-      //       'banKinh': values.banKinh,
-      //       'tenDM': values.tenDM,
-      //       'maLoaiDanhMuc': values.maLoaiDanhMuc,
-      //       'checkDD': 0
-      //     });
     }
   }
 
@@ -1529,7 +1509,6 @@ class ChatBloc extends BaseBloc {
           _listMess.addAll(value);
           mess.sink.add(_listMess);
         }
-
       });
     }
   }
