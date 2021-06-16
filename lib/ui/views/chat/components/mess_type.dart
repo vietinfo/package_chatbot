@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:package_chatbot/core/config/palettes.dart';
+import 'dart:math' as math;
 
 class MessageTile extends StatelessWidget {
   final String? message;
@@ -37,7 +38,13 @@ class MessageTile extends StatelessWidget {
                 style: TextStyle(
                   color: sendByMe! ? Colors.white : Colors.black,fontSize: 16)),
           ),
-          // !sendByMe ?Positioned(
+          // Time
+          // sendByMe! ?  Positioned(
+          //   right: 10,
+          //     bottom: 0,
+          //     child: Text('22:22', style: TextStyle(color: Colors.black.withOpacity(0.3)),) ):SizedBox.shrink(),
+
+          // !sendByMe! ?Positioned(
           //   right: 10,
           //   bottom: 0,
           //   child: Icon(

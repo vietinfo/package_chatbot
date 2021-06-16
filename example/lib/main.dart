@@ -101,9 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // const Text(
-              //   'Ứng dụng demo Chatbot của UBND Huyện Hóc Môn',
-              // ),
               const Text('Bạn vui lòng nhập tên và bấm chat ngay để bắt đầu'),
               Padding(
                 padding: const EdgeInsets.all(8.0),

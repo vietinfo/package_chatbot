@@ -197,7 +197,7 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                                   _chiTietThuTucBloc.downloadFile(files[index].templateTrong!);
 
                                 }else{
-                                  Get.back();
+                                  Navigator.pop(context);
                                   Get.snackbar('Thông báo', 'Không có file này');
                                 }
                               },

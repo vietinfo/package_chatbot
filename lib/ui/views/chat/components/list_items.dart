@@ -33,7 +33,7 @@ class ListItems extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          Get.back();
+                          Navigator.pop(context);
                           FocusScope.of(context).unfocus();
                           if( _danhMucChucNangModels![index].maChucNang! == 'TCTTHS' ){
                             checkTTHS!(true);

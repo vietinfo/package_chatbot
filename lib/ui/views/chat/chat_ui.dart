@@ -872,21 +872,23 @@ class _ChatUIState extends State<ChatUI> {
                                     tenDM = e.messRight;
                                     return (index == _chatModel!.length - 1 &&
                                             e.isInfo == false)
-                                        ? Container(
-                                            height: 30,
-                                            alignment: Alignment.center,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const SpinKitWave(
-                                                  color: Colors.blue,
-                                                  type: SpinKitWaveType.center,
-                                                  size: 15,
-                                                ),
-                                              ],
+                                        ? Padding(
+                                          padding: const EdgeInsets.only(top: 8),
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const SpinKitWave(
+                                                    color: Colors.blue,
+                                                    type: SpinKitWaveType.center,
+                                                    size: 15,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          )
+                                        )
                                         : Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -899,7 +901,9 @@ class _ChatUIState extends State<ChatUI> {
                                                         const EdgeInsets.all(
                                                             8.0),
                                                     child: GestureDetector(
-                                                      onTap: () {},
+                                                      onTap: () {
+
+                                                      },
                                                       child: MessageTile(
                                                         message: e.messRight!,
                                                         sendByMe: true,
@@ -910,7 +914,9 @@ class _ChatUIState extends State<ChatUI> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: GestureDetector(
-                                                    onTap: () {},
+                                                    onTap: () {
+
+                                                    },
                                                     child: MessageTile(
                                                       message: e.messLeft!,
                                                       sendByMe: false,
@@ -2292,6 +2298,8 @@ class _ChatUIState extends State<ChatUI> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
+      Get.snackbar('Thông báo', 'Website lỗi, vui lòng thử lại sau.');
+      //print('error 1123');
       throw 'Could not launch $url';
     }
   }
@@ -2300,8 +2308,7 @@ class _ChatUIState extends State<ChatUI> {
     final latitude = viDo;
     final longitude = kinhDo;
     final availableMaps = await MapLauncher.installedMaps;
-    print(
-        availableMaps); // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
+    print(availableMaps); // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
     await availableMaps.last.showDirections(
         destination: Coords(latitude, longitude), destinationTitle: name);
   }
