@@ -576,12 +576,61 @@ class ChatBloc extends BaseBloc {
               website: element.website));
         });
 
-        // if (value.first.custom!.data!.traCuuDiaDiem!.length > 1) {
-        //   Get.to(()=>
-        //       BlocProvider(
-        //           child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-        //       arguments: {'result': _traCuuDiaDiem, 'tenDM': tinNhan, 'checkDD': 1});
-        // } else {
+        if (value.first.custom!.data!.traCuuDiaDiem!.length > 1) {
+          TraCuu data =
+          TraCuu(data1: _traCuuDiaDiem[0], type: 'action_tra_cuu_dia_diem');
+
+          _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
+
+          TraCuu data1 = TraCuu(
+              dataBot: value,
+              data1: _traCuuDiaDiem[1],
+              type: 'action_tra_cuu_dia_diem');
+
+          _listMess.insert(
+              0,
+              ChatModel(
+                  isReadMore: (_traCuuDiaDiem.length == 2) ? false : true,
+                  traCuu: jsonEncode(data1.toJson())));
+
+          mess.sink.add(_listMess);
+
+          var params = {
+            'param': [
+              ChatModel(userName: userName, traCuu: jsonEncode(data.toJson()))
+                  .toJson(),
+              ChatModel(
+                  userName: userName,
+                  isReadMore: (_traCuuDiaDiem.length == 2) ? false : true,
+                  traCuu: jsonEncode(data1.toJson()))
+                  .toJson()
+            ]
+          };
+          _insertHistoryChat(params);
+          // _listMess.insert(
+          //     0,
+          //     ChatModel(
+          //       messLeft: 'Thông tin địa điểm $tinNhan',
+          //     ));
+          //
+          // TraCuu data = TraCuu(data: _traCuuDiaDiem, type: value.first.custom!.type);
+          //
+          // _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
+          // mess.sink.add(_listMess);
+          //
+          // var params = {
+          //   'param': [
+          //     ChatModel(
+          //       userName: userName,
+          //       messLeft: 'Thông tin địa điểm $tinNhan',
+          //     ).toJson(),
+          //     ChatModel(userName: userName, traCuu: jsonEncode(data.toJson()))
+          //         .toJson()
+          //   ]
+          // };
+          // _insertHistoryChat(params);
+
+        } else {
         final TraCuuDiaDiemModels diaDiem = TraCuuDiaDiemModels(
             maLoaiDanhMuc:
                 value.first.custom!.data!.traCuuDiaDiem!.first.maLoaiDanhMuc,
@@ -624,7 +673,7 @@ class ChatBloc extends BaseBloc {
         };
         _insertHistoryChat(params);
 
-        // }
+        }
       } else {
         _listMess.insert(
             0,
@@ -890,6 +939,10 @@ class ChatBloc extends BaseBloc {
       case 'KhuDuLich':
       case 'Cho':
       case 'SieuThi':
+      case 'AnUong':
+      case 'DoanhNghiep':
+      case 'KhachSan':
+      case 'TinNguong':
         traCuuDanhMuc(value);
         break;
 
@@ -930,10 +983,10 @@ class ChatBloc extends BaseBloc {
         break;
 
       case 'TTHDDTTHS':
-      case 'AnUong':
-      case 'DoanhNghiep':
-      case 'KhachSan':
-      case 'TinNguong':
+      // case 'AnUong':
+      // case 'DoanhNghiep':
+      // case 'KhachSan':
+      // case 'TinNguong':
         troGiup(userName);
         break;
 

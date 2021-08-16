@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context: context,
                   urlAPI: 'http://demo.vietinfo.tech:8090',
                   urlChatBot: 'http://chatbot.vietinfo.tech:8088',
-                  userName: 'userName',
+                  userName: textEditingCtrHoTen.text,
                   fullName: 'Nhan Test Ten',
                   soDienThoai: '000000000');
             }
