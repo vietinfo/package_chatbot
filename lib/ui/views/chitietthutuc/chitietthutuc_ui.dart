@@ -2,11 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:package_chatbot/core/config/base_bloc.dart';
 import 'package:package_chatbot/core/model/chi_tiet_thu_tuc_model.dart';
 import 'package:package_chatbot/ui/views/chitietthutuc/chitietthutuc_bloc.dart';
 import 'package:package_chatbot/ui/widgets/disable_glow_listview.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
 
+import 'componets/dowload_file.dart';
 class ChiTietThuTucUI extends StatefulWidget {
   @override
   _ChiTietThuTucUIState createState() => _ChiTietThuTucUIState();
@@ -16,6 +22,8 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
   int? _thuTucID;
   late ChiTietThuTucBloc _chiTietThuTucBloc;
   List<Files>? _files;
+  int _selectFile = -1;
+  int _selectTepDinhKem = -1;
 
   @override
   void initState() {
@@ -23,12 +31,10 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
     super.initState();
     _chiTietThuTucBloc = BlocProvider.of<ChiTietThuTucBloc>(context);
     Future.delayed(Duration.zero, () {
-      final  data = ModalRoute.of(context)!.settings.arguments as int;
+      final data = ModalRoute.of(context)!.settings.arguments as int;
       _thuTucID = data;
       _chiTietThuTucBloc.getChiTietThuTuc(_thuTucID!);
     });
-
-
   }
 
   @override
@@ -48,17 +54,17 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
           ),
           const Spacer(),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               showBotom(_files!);
             },
             child: Row(
-              children:const [
-                 Text(
+              children: const [
+                Text(
                   'Tài liệu',
                   style: TextStyle(color: Colors.black),
                 ),
                 Padding(
-                  padding:  EdgeInsets.only(right: 8),
+                  padding: EdgeInsets.only(right: 8),
                   child: Icon(
                     Icons.assignment_outlined,
                     color: Colors.black,
@@ -83,7 +89,6 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                         return ScrollConfiguration(
                           behavior: DisableGlowListViewCustom(),
                           child: SingleChildScrollView(
-
                             child: Column(
                               children: [
                                 Align(
@@ -95,14 +100,15 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold)),
                                     )),
-
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Html(data: snapshot.data!.moTa!)),
                                 ),
-                                const SizedBox(height: 50,)
+                                const SizedBox(
+                                  height: 50,
+                                )
                               ],
                             ),
                           ),
@@ -159,15 +165,14 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
   Future showBotom(List<Files> files) async {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
       context: context,
-      enableDrag: false,
-      builder: (context) => AnimatedPadding(
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeOut,
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Container(
+      builder: (context) {
+        return  AnimatedPadding(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
             height: Get.height * 0.5,
             decoration: const BoxDecoration(
               color: Colors.white,
@@ -176,31 +181,22 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                 topRight: Radius.circular(25),
               ),
             ),
-          child: Column(
-            children: [
-              const  Padding(
-                padding:  EdgeInsets.all(8.0),
-                child: Text('Tài liệu đính kèm'),
-              ),
-              ScrollConfiguration(
-                behavior: DisableGlowListViewCustom(),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: files.length,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                if(files[index].templateTrong != null){
-                                  _chiTietThuTucBloc.downloadFile(files[index].templateTrong!);
-
-                                }else{
-                                  Navigator.pop(context);
-                                  Get.snackbar('Thông báo', 'Không có file này');
-                                }
-                              },
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Tài liệu đính kèm'),
+                ),
+               if(files.length > 0) ScrollConfiguration(
+                  behavior: DisableGlowListViewCustom(),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: files.length,
+                      itemBuilder: (context, index) {
+                        final  indexs = files[index];
+                        return Row(
+                          children: [
+                            Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -211,16 +207,25 @@ class _ChiTietThuTucUIState extends State<ChiTietThuTucUI> {
                                 ),
                               ),
                             ),
-                          ),
-                          const Divider(),
-                        ],
-                      );
-                    }).paddingOnly(left: 10, right: 10),
-              )
-            ],
+                            DownLoadFile(files[index].templateTrong)
+                          ],
+                        );
+                      })
+                  ,
+                )else
+                  Center(
+                    child: Column(
+                      children: [
+                        const Divider(),
+                        const Text('Không có tài liệu nào', style: TextStyle(color: Colors.blue),),
+                      ],
+                    ),
+                  )
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

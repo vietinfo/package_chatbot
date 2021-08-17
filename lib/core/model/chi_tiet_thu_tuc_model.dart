@@ -43,6 +43,7 @@ class Files {
   String? templateTrong;
   String? moTaNgan;
   bool? isBanVe;
+  bool? isCheck;
 
   Files(
       {this.id,
@@ -53,7 +54,9 @@ class Files {
         this.templateMau,
         this.templateTrong,
         this.moTaNgan,
-        this.isBanVe});
+        this.isBanVe,
+        this.isCheck = false
+      });
 
   Files.fromJson(Map<String, dynamic> json) {
     id = json['id'];

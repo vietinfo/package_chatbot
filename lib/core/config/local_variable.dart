@@ -9,5 +9,6 @@ class LocalVariable {
   ///link local
   static String urlAPI = '';
   static String urlChatBot = '';
+  static String troGiup = '';
   // static String urlTraCuuHoSo = 'https://hocmon-online.tphcm.gov.vn';
 }

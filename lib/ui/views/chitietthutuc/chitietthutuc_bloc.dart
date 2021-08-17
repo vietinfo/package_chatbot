@@ -17,6 +17,11 @@ class ChiTietThuTucBloc extends BaseBloc {
 
   final BehaviorSubject<ChiTietThuTucModel> chiTietThuTuc =
       BehaviorSubject<ChiTietThuTucModel>();
+  final PublishSubject<Map<String, dynamic>> checkDowLoad =
+  PublishSubject<Map<String, dynamic>>();
+
+  final PublishSubject<double> progress = PublishSubject<double>();
+
 
   void getChiTietThuTuc(int thuTucID) {
     _chiTietThuTucAPI(thuTucID: thuTucID).then((value) {
@@ -24,14 +29,48 @@ class ChiTietThuTucBloc extends BaseBloc {
     });
   }
 
-  Future downloadFile(String url) async{
+
+  Future checkDowloadFile(List<Files> file) async {
+    final sysPath = await path_provider.getTemporaryDirectory();
+    for(var a in file){
+      if(a.templateTrong != null){
+        final _direct = join('${sysPath.path}/HocMon/${path.basename(a.templateTrong!)}');
+        if (!await File(_direct).exists()) {
+          checkDowLoad.sink.add({'check' : a.isCheck});
+        } else {
+          a.isCheck = true;
+          checkDowLoad.sink.add({'linkFile': _direct,'check' : a.isCheck});
+        }
+      }else{
+        a.isCheck = false;
+        checkDowLoad.sink.add({'check' : a.isCheck});
+      }
+    }
+
+  }
+
+
+  Future downloadFile(String url, Files index, int p) async{
     final sysPath = await path_provider.getTemporaryDirectory();
     final _direct = join('${sysPath.path}/HocMon/${path.basename(url)}');
-    if (!await File(_direct).exists())
+    final String? data = await downLoadFile(url, _direct);
+    if(data != null){
+      index.isCheck = true;
+      checkDowLoad.sink.add({'linkFile': _direct, 'check' : index.isCheck});
+    }else{
+      index.isCheck = true;
+      checkDowLoad.sink.add({'check' : index.isCheck});
+    }
 
-    final String data = await downLoadFile(url, _direct);
 
-    await OpenFile.open(_direct);
+
+  }
+
+  void showDownloadProgress(received, total) {
+    if (total > 0) {
+      final double calPercent = (received / total * 100);
+      if (!progress.isClosed) progress.sink.add(calPercent);
+    } else if (!progress.isClosed) progress.sink.add(100.0);
   }
 
 
@@ -41,5 +80,8 @@ class ChiTietThuTucBloc extends BaseBloc {
     // TODO: implement dispose
     super.dispose();
     chiTietThuTuc.close();
+    checkDowLoad.close();
+    progress.close();
   }
+
 }

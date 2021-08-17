@@ -56,6 +56,9 @@ class ChatBloc extends BaseBloc {
   final BehaviorSubject<List<PhuongXaModel>> dsPhuongXa =
       BehaviorSubject<List<PhuongXaModel>>();
 
+
+
+  /// Get lich su chat
   void getAllHistoryChat({
     String? userName,
     String? tinNhan,
@@ -150,6 +153,7 @@ class ChatBloc extends BaseBloc {
     });
   }
 
+  /// Gui tin nhan qua api
   void sendMessAPI({
     String? userName,
     String? tinNhan,
@@ -212,6 +216,7 @@ class ChatBloc extends BaseBloc {
     }
   }
 
+  /// Gui tin nhan qua bot
   void sendMessBot(String userName, String tinNhan,
       {List<DanhMucChucNangModels>? danhMucChucNang,
       bool? checkTTHS,
@@ -578,14 +583,14 @@ class ChatBloc extends BaseBloc {
 
         if (value.first.custom!.data!.traCuuDiaDiem!.length > 1) {
           TraCuu data =
-          TraCuu(data1: _traCuuDiaDiem[0], type: 'action_tra_cuu_dia_diem');
+          TraCuu(data1: _traCuuDiaDiem[0], type: value.first.custom!.type);
 
           _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
 
           TraCuu data1 = TraCuu(
-              dataBot: value,
+              data: value.first.custom!.data!.traCuuDiaDiem,
               data1: _traCuuDiaDiem[1],
-              type: 'action_tra_cuu_dia_diem');
+              type: value.first.custom!.type);
 
           _listMess.insert(
               0,
@@ -1486,71 +1491,88 @@ class ChatBloc extends BaseBloc {
 
   void readMoreDD(String userName, TraCuu values, String? tinNhan, int? pageNum,
       double? lat, double? long,
-      {required BuildContext context}) {
+      {required BuildContext context, }) {
     if (values.dataBot != null) {
       var data = values.dataBot;
 
-      _traCuuDiaDiemAPI(
-              banKinh: data!.first.custom!.data!.banKinh,
-              maLoaiDanhMuc: data.first.custom!.data!.maLoaiDanhMuc,
-              tenCoQuan: data.first.custom!.data!.tenCoQuan,
-              maCoQuan: data.first.custom!.data!.maCoQuan,
-              pageNum: 1)
-          .then((value) {
-        if (value != null) {
-          if (value.isNotEmpty) {
-            if (value.length > 1) {
-              ObjectData dataTCDD = ObjectData()
-                ..banKinh = data.first.custom!.data!.banKinh
-                ..tenDM = tinNhan
-                ..traCuuDiaDiem = value
-                ..botMess = data
-                ..checkDD = 1;
+        _traCuuDiaDiemAPI(
+            banKinh: data!.first.custom!.data!.banKinh,
+            maLoaiDanhMuc: data.first.custom!.data!.maLoaiDanhMuc,
+            tenCoQuan: data.first.custom!.data!.tenCoQuan,
+            maCoQuan: data.first.custom!.data!.maCoQuan,
+            pageNum: 1)
+            .then((value) {
+          if (value != null) {
+            if (value.isNotEmpty) {
+              if (value.length > 1) {
+                ObjectData dataTCDD = ObjectData()
+                  ..banKinh = data.first.custom!.data!.banKinh
+                  ..tenDM = tinNhan
+                  ..traCuuDiaDiem = value
+                  ..botMess = data
+                  ..checkDD = 1;
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                      child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-                  settings: RouteSettings(
-                    arguments: dataTCDD,
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                        child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+                    settings: RouteSettings(
+                      arguments: dataTCDD,
+                    ),
                   ),
-                ),
-              );
+                );
 
+              }
+            } else {
+              _listMess.insert(
+                  0,
+                  ChatModel(
+                    messRight:
+                    'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập, bạn vui lòng thử lại sau',
+                  ));
+              mess.sink.add(_listMess);
             }
           } else {
-            _listMess.insert(
-                0,
-                ChatModel(
-                  messRight:
-                      'Xin lỗi dự liệu này hiện tại của tôi chưa được cập nhập, bạn vui lòng thử lại sau',
-                ));
-            mess.sink.add(_listMess);
+            troGiup(userName);
           }
-        } else {
-          troGiup(userName);
-        }
-      });
-    } else {
-      ObjectData dataTCDD = ObjectData()
-        ..banKinh = values.banKinh
-        ..tenDM = values.tenDM
-        ..maLoaiDanhMuc = values.maLoaiDanhMuc
-        ..lat = lat
-        ..long = long
-        ..checkDD = 0;
+        });
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
-          settings: RouteSettings(
-            arguments: dataTCDD,
+
+    } else {
+      if(values.data != null){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+            settings: RouteSettings(
+              arguments: values.data,
+            ),
           ),
-        ),
-      );
+        );
+
+      }else{
+        ObjectData dataTCDD = ObjectData()
+          ..banKinh = values.banKinh
+          ..tenDM = values.tenDM
+          ..maLoaiDanhMuc = values.maLoaiDanhMuc
+          ..lat = lat
+          ..long = long
+          ..checkDD = 0;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                BlocProvider(child: TraCuuDiaDiemUI(), bloc: TraCuuDiaDiemBloc()),
+            settings: RouteSettings(
+              arguments: dataTCDD,
+            ),
+          ),
+        );
+      }
+
     }
   }
 

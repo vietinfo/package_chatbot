@@ -24,6 +24,8 @@ import 'package:package_chatbot/ui/widgets/disable_glow_listview.dart';
 import 'package:package_chatbot/ui/widgets/web_view_widget.dart';
 import 'package:popover/popover.dart';
 import 'package:speech_to_text_vi/speech_to_text_vi.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'components/expandable_custom.dart';
@@ -2204,7 +2206,15 @@ class _ChatUIState extends State<ChatUI> {
 
   void _sendThongTinQuyHoach(String value) {
     if (value.trim().isEmpty) {
-      Get.snackbar('Thông báo', 'Vui lòng nhập giá trị');
+      showTopSnackBar(
+
+        context,
+        CustomSnackBar.error(
+          message:
+          'Vui lòng nhập giá trị',
+        ),
+      );
+
       return;
     }
 
@@ -2298,7 +2308,15 @@ class _ChatUIState extends State<ChatUI> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Get.snackbar('Thông báo', 'Website lỗi, vui lòng thử lại sau.');
+      showTopSnackBar(
+
+        context,
+        CustomSnackBar.error(
+          message:
+          'Website lỗi, vui lòng thử lại sau.',
+        ),
+      );
+
       //print('error 1123');
       throw 'Could not launch $url';
     }

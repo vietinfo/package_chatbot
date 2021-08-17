@@ -30,6 +30,8 @@ dependencies:
   open_file: ^3.2.1
 #  google_place: ^0.4.0
   popover: ^0.2.6+1
+  percent_indicator: ^3.0.1
+  top_snackbar_flutter: ^1.0.0
 
 #  scroll_to_index: ^2.0.0
 #  dropdownfield: ^1.0.3
@@ -39,6 +41,8 @@ dependencies:
     git:
       url: https://github.com/vietinfo/speech_to_text_vi.git
       ref: 6c1d3c42b09df5f2deb3fc8ddd85a10fa62831fc
+
+
 
 
 dev_dependencies:

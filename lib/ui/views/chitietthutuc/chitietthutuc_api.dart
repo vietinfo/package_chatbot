@@ -16,9 +16,9 @@ Future<ChiTietThuTucModel?> _chiTietThuTucAPI({int? thuTucID}) async {
 }
 
 @protected
-Future<String> downLoadFile(String url, String filePath) async {
+Future<String?> downLoadFile(String url, String filePath) async {
   try {
-    return (await HttpRequest.instance.download1(url, filePath))!;
+    return await HttpRequest.instance.download1(url, filePath);
   } catch (e) {
     print(e);
     return 'Lỗi';
