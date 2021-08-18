@@ -850,15 +850,17 @@ class _ChatUIState extends State<ChatUI> {
                                 } else {
                                   _checkTTQH1 = false;
                                 }
-                                  // kiem tra thong tin quy hoach neu isTCQH = 1 => Nhap dung thong tin
-                                if(_chatModel!.first.isTCQH == 1){
-                                  _checkTTQH = false;
-                                  _checkTTQH1 = _chatModel!.first.isTTQHEnd!;
-                                }
-                                // kiem tra thong tin quy hoach neu isTCQH = 2 => Nhap sai thong tin yeu cau nhap lai
-                                if(_chatModel!.first.isTCQH == 2){
-                                  _checkPX = 0;
-                                }
+
+                                /// de xuat => mo ra khi co yeu cau
+                                //   // kiem tra thong tin quy hoach neu isTCQH = 1 => Nhap dung thong tin
+                                // if(_chatModel!.first.isTCQH == 1){
+                                //   _checkTTQH = false;
+                                //   _checkTTQH1 = _chatModel!.first.isTTQHEnd!;
+                                // }
+                                // // kiem tra thong tin quy hoach neu isTCQH = 2 => Nhap sai thong tin yeu cau nhap lai
+                                // if(_chatModel!.first.isTCQH == 2){
+                                //   _checkPX = 0;
+                                // }
 
 
 
