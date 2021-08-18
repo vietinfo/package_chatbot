@@ -1,17 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../chitietthutuc_bloc.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart';
 
 class DownLoadFile extends StatefulWidget {

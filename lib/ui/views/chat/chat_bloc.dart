@@ -1201,8 +1201,8 @@ class ChatBloc extends BaseBloc {
         TraCuu data = TraCuu(
             chiTietQuyHoachModel: value,
             type: 'action_tra_cuu_thong_tin_quy_hoach');
-
-        _listMess.insert(0, ChatModel(traCuu: jsonEncode(data.toJson())));
+        // kiem tra thong tin quy hoach neu isTCQH = 1 => Nhap dung thong tin
+        _listMess.insert(0, ChatModel(isTTQH: false, isTTQHEnd: true, isTCQH: 1, traCuu: jsonEncode(data.toJson())));
         mess.sink.add(_listMess);
 
         var params = {
@@ -1215,13 +1215,37 @@ class ChatBloc extends BaseBloc {
       }
       // Get.to(WebViewWidget(value));
       else {
+        checkHuy.sink.add(true);
         typing.sink.add(true);
-        _listMess.insert(0, ChatModel(messLeft: 'không tìm thấy thông tin'));
+        _listMess.insert(
+            0,
+            ChatModel(
+                messLeft:
+                    'Không tìm thấy thông tin, quý khách vui lòng kiểm tra và nhập lại thông tin theo hướng dẫn'));
+        // kiem tra thong tin quy hoach neu isTCQH = 2 => Nhap sai thong tin yeu cau nhap lai
+        _listMess.insert(
+            0,
+            ChatModel(
+              isTTQH: true, isTTQHEnd: false,
+              isTCQH: 2,
+              messLeft: 'Bạn vui lòng nhập Phường(xã)',
+            ));
+
         mess.sink.add(_listMess);
+
         typing.sink.add(false);
         var params = {
           'param': [
-            ChatModel(userName: userName, messLeft: 'không tìm thấy thông tin')
+            ChatModel(
+                    userName: userName,
+                    messLeft:
+                    'Không tìm thấy thông tin, quý khách vui lòng kiểm tra và nhập lại thông tin theo hướng dẫn')
+                .toJson(),
+            ChatModel(
+                userName: userName,
+              isTTQH: true, isTTQHEnd: false,
+              isTCQH: 2,
+              messLeft: 'Bạn vui lòng nhập Phường(xã)',)
                 .toJson(),
           ]
         };

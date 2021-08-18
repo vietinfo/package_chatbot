@@ -32,6 +32,8 @@ class ChatModel {
 
   bool? line = false;
   String? checkTTHS;
+  // check tra cuu quy hoach
+  int? isTCQH = 0;
 
   ChatModel({
     this.id,
@@ -54,6 +56,7 @@ class ChatModel {
     this.createDate,
     this.line = false,
     this.checkTTHS,
+    this.isTCQH = 0
   });
 
   ChatModel.fromJson(Map<String, dynamic> json) {
